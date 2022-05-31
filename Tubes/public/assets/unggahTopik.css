@@ -1,0 +1,41 @@
+
+.unggahContainer{
+    display: flex;
+    flex-direction: column;
+}
+/* CSS Bagian Container unggahTop */
+
+.unggahTop{
+    margin: 2rem 1rem 0.5rem 1rem;
+    border: solid darkblue 0.1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.unggahTop h3{
+    margin: 1rem;
+}
+
+/* CSS Bagian Container unggahMain */
+
+.unggahMain{
+    padding: 1rem;
+    margin: 1rem 1rem 2rem 1rem;
+    background-color: darkblue;
+}
+label{
+    color: white;
+    margin: 1rem 0rem 1rem 0rem;
+}
+fieldset{
+    display: flex;
+    flex-direction: column;
+    border: solid 0.1rem white;
+}
+.submitSkripsi{
+    display: inline-block;
+    align-items: center;
+    text-align: center;
+}
