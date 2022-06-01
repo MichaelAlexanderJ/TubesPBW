@@ -35,6 +35,12 @@ app.get('/unggahTopik', async(req,res) => {
     });
 });
 
+app.get('/skripsiSaya', async(req,res) => {
+    res.render('topikSkripsiSaya',{
+
+    });
+});
+
 app.post('/', async(req,res) => {
     res.redirect('home');
 })
