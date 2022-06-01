@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/topikSkripsiSaya.css">
     <title>Topik Saya</title>
 </head>
 <body>
     <header>
         <%- include('./layout/head.ejs') %>
     </header>
-
     <div class="skripsisSayaContainer">
         <div class="skripsiSayaTop">
             <h3>Icon</h3>
@@ -18,11 +18,25 @@
 
             <p class="dueDateUnggah">Due/05/2022</p>
         </div>
-
         <br>
-        
-        <div>
-
+        <div class="skripsiSayaMain">
+                <div class="innerMain">
+                    <a class="wrapper" href="">
+                        <div class="innerMain1">
+                            <img src="assets/images/bookIcon.jpg" class="bookIcon" alt="">
+                            <h3>Aplikasi Data Mining Untuk Menampilkan Informasi Tingkat Kelulusan Mahasiswa</h3>
+                            <input type="submit" id="buttonEdit" onclick="redirect" value="Edit">
+                        </div>
+                    </a>
+                    <a class="wrapper" href="">
+                        <div class="innerMain2">
+                            <img src="assets/images/bookIcon.jpg" class="bookIcon" alt="">
+                            <h3>Penerapan Algoritma Differential Evolution untuk Penyelesaian Permasalahan Vehicle Routing Problem with Delivery and Pick-up
+                            </h3>
+                            <input type="submit" id="buttonEdit" onclick="redirect" value="Edit">
+                        </div>
+                    </a>
+                </div>
         </div>
     
 
