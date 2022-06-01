@@ -14,15 +14,43 @@ app.set('view engine','ejs');
 app.use(express.urlencoded({ extended: true }));
 
 
+// Connect Database
+
+const pool = mysql.createPool({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'DATA'
+});
+
+const dbConnect = () => {
+    return new Promise((resolve,reject) => {
+        pool.getConnection((err,conn) => {
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(conn);
+                
+            }
+        })
+    })
+}
+
+
 // ambil koneksi
 
 app.get('/home', async(req,res) => {
+    const conn = await dbConnect();
+    conn.release();
     res.render('home', {
             
     });
 });
 
 app.get('/', async(req,res) => {
+    const conn = await dbConnect();
+    conn.release();
     res.render('login', {
             
     });
@@ -30,18 +58,24 @@ app.get('/', async(req,res) => {
 
 
 app.get('/unggahTopik', async(req,res) => {
+    const conn = await dbConnect();
+    conn.release();
     res.render('unggahTopik',{
 
     });
 });
 
 app.get('/skripsiSaya', async(req,res) => {
+    const conn = await dbConnect();
+    conn.release();
     res.render('topikSkripsiSaya',{
 
     });
 });
 
 app.post('/', async(req,res) => {
+    const conn = await dbConnect();
+    conn.release();
     res.redirect('home');
 })
 
