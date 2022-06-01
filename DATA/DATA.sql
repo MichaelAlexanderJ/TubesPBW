@@ -1,11 +1,3 @@
-drop table Dosen
-drop table usertype
-drop table Review
-drop table Semester
-drop table statusS
-drop table Mahasiswa
-drop table Topik
-
 CREATE TABLE Dosen(
 	namaD varchar(100),
 	noDosen char(10),
@@ -89,33 +81,10 @@ INSERT INTO Topik
 VALUES('201', 'Pengaruh Big Data pada Teknologi', '1181988001', NULL),
 ('101', 'Aplikasi Java pada Kehidupan Sehari-hari', '1181988002', NULL),
 ('202', 'Aplikasi Data Mining Untuk Menampilkan Informasi Tingkat Kelulusan Mahasiswa', '1181988003', NULL),
-('102', 'Penerapan Algoritma Differential Evolution untuk Penyelesaian Permasalahan Vehicle Routing Problem with Delivery and Pick-up', '1181988004', NULL),
+('102', 'Penerapan Algoritma Differential Evolution untuk Penyelesaian Permasalahan Vehicle Routing Problem with Delivery and Pick-up
+', '1181988004', NULL),
 ('203', 'Penerapan Metode Asosiasi Data Mining Menggunakan Algoritma Apriori Untuk Mengetahui Kombinasi Antar Itemset Pada Pondok KOPI', '1181988005', NULL)
 
 
 
 
-
-
-SELECT *
-FROM Mahasiswa
-ORDER BY NPM asc
-
-SELECT *
-FROM Dosen
-ORDER BY noDosen asc
-
-SELECT *
-FROM statusS
-
-SELECT *
-FROM usertype
-
-SELECT *
-FROM Review
-
-SELECT *
-FROM Semester
-
-SELECT *
-FROM Topik
