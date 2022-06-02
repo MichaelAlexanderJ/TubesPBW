@@ -20,7 +20,7 @@ const pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'DATA'
+    database: 'DATATUBES'
 });
 
 const dbConnect = () => {
@@ -83,7 +83,7 @@ app.get('/skripsiSaya', async(req,res) => {
 app.post('/', async(req,res) => {
     const conn = await dbConnect();
     conn.release();
-    res.redirect('home');
+    res.redirect('homeAdmin');
 })
 
 app.listen(PORT, () => {
