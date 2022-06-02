@@ -47,6 +47,13 @@ app.get('/home', async(req,res) => {
             
     });
 });
+app.get('/homeAdmin', async(req,res) => {
+    const conn = await dbConnect();
+    conn.release();
+    res.render('homeAdmin', {
+            
+    });
+});
 
 app.get('/', async(req,res) => {
     const conn = await dbConnect();
