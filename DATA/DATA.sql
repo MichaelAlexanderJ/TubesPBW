@@ -1,5 +1,5 @@
 CREATE TABLE Dosen(
-	namaDosen varchar(100),
+	namaD varchar(100),
 	noDosen char(10),
 	username varchar(50),
 	pwd varchar(50),
