@@ -1,8 +1,8 @@
-import express, { query, Router } from 'express';
+import express from 'express';
 import path, { resolve } from 'path';
 import mysql from 'mysql';
 
-const route = express.Router();
+var route = express.Router();
 
 // Connect Database
 
@@ -84,4 +84,4 @@ route.post('/', async(req,res) => {
     res.redirect('homeAdmin');
 })
 
-module.exports(route);
+export {route};

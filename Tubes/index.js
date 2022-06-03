@@ -1,12 +1,12 @@
 import express, { query } from 'express';
 import path, { resolve } from 'path';
 import mysql from 'mysql';
-import {router} from './router.js'
+import {route} from './router.js'
 
-app.use(router);
 
 const PORT = 8080;
 const app = express();
+app.use(route)
 
 const publicPath = path.resolve('public');
 app.use(express.static(publicPath));
