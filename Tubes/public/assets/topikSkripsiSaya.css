@@ -113,16 +113,27 @@ fieldset{
     height: 4%;
     justify-items: center;
     align-items: center;
-    margin-top: 1.3%;
+    margin-top: 0%;
+}
+.editButton p{
+    padding-left: 50%;
 }
 
 #buttonEdit{
     margin-left: 30%;
     border-radius: 0.5rem;
-    height: 4rem;
+    height: 2rem;
     width: 4rem; 
 }
+.status{
+    margin-left: 0%;
+    padding-top: 0%;
+    font-weight: bolder;
+    font-size: 130%;
+    margin-bottom: 30%;
+}
 
+/* CSS Bagian inner1 Container textMain */
 
 .innerMain1 h3{
     padding: 0rem;
@@ -132,11 +143,13 @@ fieldset{
 
 .textContent {
     margin-top: 0%;
+    
 }
 
 .textContent p{
     padding-left: 1rem;
     padding-bottom: 2rem;
 }
+
 
 
