@@ -80,6 +80,14 @@ app.get('/skripsiSaya', async(req,res) => {
     });
 });
 
+app.get('/kelolaAKun', async(req,res) => {
+    const conn = await dbConnect();
+    conn.release();
+    res.render('kelolaAkun',{
+
+    });
+});
+
 app.post('/', async(req,res) => {
     const conn = await dbConnect();
     conn.release();
