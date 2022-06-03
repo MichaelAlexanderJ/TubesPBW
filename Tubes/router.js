@@ -1,7 +1,8 @@
-import express, { query } from 'express';
+import express, { query, Router } from 'express';
 import path, { resolve } from 'path';
 import mysql from 'mysql';
 
+const route = express.Router();
 
 // Connect Database
 
@@ -29,14 +30,14 @@ const dbConnect = () => {
 
 // ambil koneksi
 
-app.get('/home', async(req,res) => {
+route.get('/home', async(req,res) => {
     const conn = await dbConnect();
     conn.release();
     res.render('home', {
             
     });
 });
-app.get('/homeAdmin', async(req,res) => {
+route.get('/homeAdmin', async(req,res) => {
     const conn = await dbConnect();
     conn.release();
     res.render('homeAdmin', {
@@ -44,7 +45,7 @@ app.get('/homeAdmin', async(req,res) => {
     });
 });
 
-app.get('/', async(req,res) => {
+route.get('/', async(req,res) => {
     const conn = await dbConnect();
     conn.release();
     res.render('login', {
@@ -53,7 +54,7 @@ app.get('/', async(req,res) => {
 });
 
 
-app.get('/unggahTopik', async(req,res) => {
+route.get('/unggahTopik', async(req,res) => {
     const conn = await dbConnect();
     conn.release();
     res.render('unggahTopik',{
@@ -61,7 +62,7 @@ app.get('/unggahTopik', async(req,res) => {
     });
 });
 
-app.get('/skripsiSaya', async(req,res) => {
+route.get('/skripsiSaya', async(req,res) => {
     const conn = await dbConnect();
     conn.release();
     res.render('topikSkripsiSaya',{
@@ -69,7 +70,7 @@ app.get('/skripsiSaya', async(req,res) => {
     });
 });
 
-app.get('/kelolaAKun', async(req,res) => {
+route.get('/kelolaAKun', async(req,res) => {
     const conn = await dbConnect();
     conn.release();
     res.render('kelolaAkun',{
@@ -77,8 +78,10 @@ app.get('/kelolaAKun', async(req,res) => {
     });
 });
 
-app.post('/', async(req,res) => {
+route.post('/', async(req,res) => {
     const conn = await dbConnect();
     conn.release();
     res.redirect('homeAdmin');
 })
+
+module.exports(route);
