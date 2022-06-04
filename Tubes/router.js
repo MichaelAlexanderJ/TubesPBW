@@ -17,6 +17,19 @@ const getUsers = conn => {
     });
 };
 
+const getNameF = (conn,getName) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`SELECT * FROM dosen WHERE namad LIKE '%${getName}%' `,(err,result) => {
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
 // Connect Database
 
 const pool = mysql.createPool({
@@ -83,14 +96,19 @@ route.get('/skripsiSaya', async(req,res) => {
     });
 });
 
-route.get('/kelolaAKun', async(req,res) => {
+route.get('/kelolaAKun',express.urlencoded(), async(req,res) => {
+    const getName = req.query.filter;
     const conn = await dbConnect();
     let results = await getUsers(conn);
+    if(getName != undefined && getName.length > 0){
+        results = await getNameF(conn,getName);
+    }
     conn.release();
     res.render('kelolaAkun',{
         results
     });
 });
+
 
 // route.post('/',express.urlencoded(),async(req,res) => {
 //     const conn = await dbConnect();
@@ -113,6 +131,7 @@ route.post('/',express.urlencoded(), async(req,res) => {
             res.send('Username atau Password anda salah!')
         }
     })
+    conn.release();
 })
 
 export {route};
