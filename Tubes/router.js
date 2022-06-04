@@ -4,6 +4,19 @@ import mysql from 'mysql';
 
 var route = express.Router();
 
+// query
+const getUsers = conn => {
+    return new Promise((resolve,reject) => {
+        conn.query('SELECT * FROM dosen', (err,result) => {
+            if(err){
+                reject(err);
+            }else{
+                resolve(result);
+            }
+        });
+    });
+};
+
 // Connect Database
 
 const pool = mysql.createPool({
@@ -72,9 +85,10 @@ route.get('/skripsiSaya', async(req,res) => {
 
 route.get('/kelolaAKun', async(req,res) => {
     const conn = await dbConnect();
+    let results = await getUsers(conn);
     conn.release();
     res.render('kelolaAkun',{
-
+        results
     });
 });
 

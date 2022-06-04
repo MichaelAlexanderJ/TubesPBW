@@ -23,20 +23,17 @@
 
         <div class="kelolaAkunMain">
                 <div class="innerMain">
+                    <% for(const row of results) { %>
                     <a class="wrapper" href="">
                         <div class="innerMain1">
                             <img src="assets/images/adminIcon.jpg" class="adminIcon" alt="">
-                            <h3>Jose Feliksilda</h3>
-                            <input type="submit" id="buttonEdit" onclick="redirect" value="Edit">
+                            <h3><%= row.namaD %></h3>
+                            <div class="containerButton">
+                                <input type="submit" id="buttonEdit" onclick="redirect" value="Edit">
+                            </div>
                         </div>
                     </a>
-                    <a class="wrapper" href="">
-                        <div class="innerMain2">
-                            <img src="assets/images/adminIcon.jpg" class="adminIcon" alt="">
-                            <h3>Maria Veronica</h3>
-                            <input type="submit" id="buttonEdit" onclick="redirect" value="Edit">
-                        </div>
-                    </a>
+                    <% } %>
                 </div>
         </div>
     
