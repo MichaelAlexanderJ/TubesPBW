@@ -78,10 +78,27 @@ route.get('/kelolaAKun', async(req,res) => {
     });
 });
 
-route.post('/', async(req,res) => {
+// route.post('/',express.urlencoded(),async(req,res) => {
+//     const conn = await dbConnect();
+//     conn.release();
+//     res.redirect('homeAdmin');
+//     console.log(req.body);
+// })
+
+route.post('/',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
-    conn.release();
-    res.redirect('homeAdmin');
+    var username = req.body.user;
+    var password = req.body.pass;
+    var sql = 'SELECT username, pwd FROM dosen WHERE username =? AND pwd =?';
+    conn.query(sql, [username,password], (err, results, fields)=>{
+        if(err) throw err;
+        if(results.length>0){
+            res.redirect('/homeAdmin')
+        }
+        else{
+            res.send('Username atau Password anda salah!')
+        }
+    })
 })
 
 export {route};
