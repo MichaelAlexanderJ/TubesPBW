@@ -1,6 +1,7 @@
 import express from 'express';
 import path, { resolve } from 'path';
 import mysql from 'mysql';
+import flash from 'connect-flash'
 
 var route = express.Router();
 
@@ -47,11 +48,10 @@ route.get('/homeAdmin', async(req,res) => {
 
 route.get('/', async(req,res) => {
     const conn = await dbConnect();
+    const message = req.flash('message')
     conn.release();
-    res.render('login', {
-            
+    res.render('login', { message})
     });
-});
 
 
 route.get('/unggahTopik', async(req,res) => {
@@ -91,12 +91,12 @@ route.post('/',express.urlencoded(), async(req,res) => {
     var password = req.body.pass;
     var sql = 'SELECT username, pwd FROM dosen WHERE username =? AND pwd =?';
     conn.query(sql, [username,password], (err, results, fields)=>{
-        if(err) throw err;
         if(results.length>0){
             res.redirect('/homeAdmin')
         }
         else{
-            res.send('Username atau Password anda salah!')
+            req.flash('message', 'Username atau Password anda salah!');
+            res.redirect('/')
         }
     })
 })

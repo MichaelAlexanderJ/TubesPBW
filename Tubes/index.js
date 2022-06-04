@@ -4,9 +4,18 @@ import mysql from 'mysql';
 import {route} from './router.js'
 import bodyParser from 'body-parser';
 import session from 'express-session';
+import alert from 'alert';
+import * as popup from 'node-popup';
+import flash from 'connect-flash'
 
 const PORT = 8080;
 const app = express();
+app.use(session({
+	secret: 'secret',
+	resave: false,
+	saveUninitialized: false
+}));
+app.use(flash())
 app.use(route)
 
 const publicPath = path.resolve('public');
@@ -14,14 +23,6 @@ app.use(express.static(publicPath));
 
 
 app.set('view engine','ejs');
-
-
-
-app.use(session({
-	secret: 'secret',
-	resave: true,
-	saveUninitialized: true
-}));
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
