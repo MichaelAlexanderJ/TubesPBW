@@ -88,6 +88,14 @@ app.get('/kelolaAKun', async(req,res) => {
     });
 });
 
+app.get('/daftarTopik', async(req,res) => {
+    const conn = await dbConnect();
+    conn.release();
+    res.render('daftarTopik',{
+
+    });
+});
+
 app.post('/', async(req,res) => {
     const conn = await dbConnect();
     conn.release();
