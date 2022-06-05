@@ -4,7 +4,17 @@ import mysql from 'mysql';
 import flash from 'connect-flash'
 
 var route = express.Router();
-
+const getRoles = (conn, username) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`SELECT roles FROM dosen WHERE username LIKE '%${username}%' `, (err,result) => {
+            if(err){
+                reject(err);
+            }else{
+                resolve(result);
+            }
+        });
+    });
+};
 // Connect Database
 
 const pool = mysql.createPool({
@@ -42,7 +52,6 @@ route.get('/homeAdmin', async(req,res) => {
     const conn = await dbConnect();
     conn.release();
     res.render('homeAdmin', {
-            
     });
 });
 
@@ -89,14 +98,22 @@ route.post('/',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     var username = req.body.user;
     var password = req.body.pass;
-    var sql = 'SELECT username, pwd FROM dosen WHERE username =? AND pwd =?';
-    conn.query(sql, [username,password], (err, results, fields)=>{
-        if(results.length>0){
-            res.redirect('/homeAdmin')
-        }
+    var roleDosen = getRoles(conn,username);
+    var sql = 'SELECT username, pwd, roles FROM dosen WHERE username =? AND pwd =?';
+    conn.query(sql, [username,password], (err, results)=>{
+            if(results[0].roles == "Admin" ){
+                res.redirect('/homeAdmin')
+                console.log(results)
+            }
+            else if(results[0].roles == "Dosen"){
+                res.redirect('/home')
+                console.log(results)
+            }
+        
         else{
             req.flash('message', 'Username atau Password anda salah!');
             res.redirect('/')
+            console.log(results[0].roles)
         }
     })
 })
