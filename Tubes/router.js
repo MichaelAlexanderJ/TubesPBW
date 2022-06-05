@@ -77,8 +77,29 @@ app.get('/kelolaAKun', async(req,res) => {
     });
 });
 
+app.get('/daftarTopik', async(req,res) => {
+    const conn = await dbConnect();
+    conn.release();
+    res.render('daftarTopik',{
+
+    });
+});
+
 app.post('/', async(req,res) => {
     const conn = await dbConnect();
     conn.release();
     res.redirect('homeAdmin');
 })
+
+route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
+    const getName = req.query.filter;
+    const conn = await dbConnect();
+    let results = await getUsers(conn);
+    if(getName != undefined && getName.length > 0){
+        results = await getNameF(conn,getName);
+    }
+    conn.release();
+    res.render('daftarTopik',{
+        results
+    });
+});
