@@ -96,7 +96,7 @@ route.get('/skripsiSaya', async(req,res) => {
     });
 });
 
-route.get('/kelolaAKun',express.urlencoded(), async(req,res) => {
+route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
     const getName = req.query.filter;
     const conn = await dbConnect();
     let results = await getUsers(conn);
