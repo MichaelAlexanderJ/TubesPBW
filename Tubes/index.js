@@ -1,3 +1,4 @@
+
 import express, { query } from 'express';
 import path, { resolve } from 'path';
 import mysql from 'mysql';
@@ -32,5 +33,4 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
-    
-})
+}
