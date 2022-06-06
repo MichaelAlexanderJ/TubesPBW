@@ -2,6 +2,23 @@ import express, { query } from 'express';
 import path, { resolve } from 'path';
 import mysql from 'mysql';
 
+var route = express.Router();
+
+// query
+
+
+const getJudul = (conn,getJudul) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`SELECT * FROM topik WHERE judulTopik LIKE '%${getJudul}%' `,(err,result) => {
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
 
 // Connect Database
 
@@ -92,11 +109,11 @@ app.post('/', async(req,res) => {
 })
 
 route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
-    const getName = req.query.filter;
+    const getJudul = req.query.filter;
     const conn = await dbConnect();
     let results = await getUsers(conn);
-    if(getName != undefined && getName.length > 0){
-        results = await getNameF(conn,getName);
+    if(getJudul != undefined && getJudul.length > 0){
+        results = await getNameF(conn,getJudul);
     }
     conn.release();
     res.render('daftarTopik',{
