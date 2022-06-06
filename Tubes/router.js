@@ -44,15 +44,25 @@ const dbConnect = () => {
 route.get('/home', async(req,res) => {
     const conn = await dbConnect();
     conn.release();
-    res.render('home', {
+    if(req.session.loggedin){
+        res.render('home', {
             
-    });
+        });
+    } else {
+        res.send('Anda harus login terlebih dahulu')
+    }
 });
+
 route.get('/homeAdmin', async(req,res) => {
     const conn = await dbConnect();
     conn.release();
-    res.render('homeAdmin', {
-    });
+    if(req.session.loggedin){
+        res.render('homeAdmin', {
+            
+        });
+    } else {
+        res.send('Anda harus login terlebih dahulu')
+    }
 });
 
 route.get('/', async(req,res) => {
@@ -87,13 +97,6 @@ route.get('/kelolaAKun', async(req,res) => {
     });
 });
 
-// route.post('/',express.urlencoded(),async(req,res) => {
-//     const conn = await dbConnect();
-//     conn.release();
-//     res.redirect('homeAdmin');
-//     console.log(req.body);
-// })
-
 route.post('/',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     var username = req.body.user;
@@ -101,7 +104,11 @@ route.post('/',express.urlencoded(), async(req,res) => {
     var roleDosen = getRoles(conn,username);
     var sql = 'SELECT username, pwd, roles FROM dosen WHERE username =? AND pwd =?';
     conn.query(sql, [username,password], (err, results)=>{
-            if(results[0].roles == "Admin" ){
+        if(err) throw err;
+        if(results.length > 0){
+            req.session.loggedin = true;
+            req.session.username = username;
+            if(results[0].roles == "Admin"){
                 res.redirect('/homeAdmin')
                 console.log(results)
             }
@@ -109,12 +116,12 @@ route.post('/',express.urlencoded(), async(req,res) => {
                 res.redirect('/home')
                 console.log(results)
             }
-        
+        }
         else{
             req.flash('message', 'Username atau Password anda salah!');
             res.redirect('/')
-            console.log(results[0].roles)
         }
+        res.end();
     })
 })
 
