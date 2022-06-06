@@ -18,18 +18,6 @@ const getUsers = conn => {
     });
 };
 
-const getJudul = (conn,getJudul) => {
-    return new Promise((resolve,reject) => {
-        conn.query(`SELECT * FROM topik WHERE judulTopik LIKE '%${getJudul}%' `,(err,result) => {
-            if(err){
-                reject(err);
-            }
-            else{
-                resolve(result);
-            }
-        })
-    })
-}
 
 // Connect Database
 
@@ -120,12 +108,8 @@ app.post('/', async(req,res) => {
 })
 
 route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
-    const getJudul = req.query.filter;
     const conn = await dbConnect();
     let results = await getUsers(conn);
-    if(getJudul != undefined && getJudul.length > 0){
-        results = await getNameF(conn,getJudul);
-    }
     conn.release();
     res.render('daftarTopik',{
         results
