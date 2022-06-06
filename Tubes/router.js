@@ -44,24 +44,32 @@ const dbConnect = () => {
 route.get('/home', async(req,res) => {
     const conn = await dbConnect();
     conn.release();
+    var nama = req.session.name;
+    var noID = req.session.noID;
+    var roleD = req.session.role;
     if(req.session.loggedin){
         res.render('home', {
-            
+            nama, noID, roleD
         });
     } else {
-        res.send('Anda harus login terlebih dahulu')
+        req.flash('message', 'Anda harus login terlebih dahulu');
+        res.redirect('/')
     }
 });
 
 route.get('/homeAdmin', async(req,res) => {
     const conn = await dbConnect();
     conn.release();
+    var nama = req.session.name;
+    var noID = req.session.noID;
+    var roleD = req.session.role;
     if(req.session.loggedin){
         res.render('homeAdmin', {
-            
+            nama, noID, roleD
         });
     } else {
-        res.send('Anda harus login terlebih dahulu')
+        req.flash('message', 'Anda harus login terlebih dahulu');
+        res.redirect('/')
     }
 });
 
@@ -102,20 +110,22 @@ route.post('/',express.urlencoded(), async(req,res) => {
     var username = req.body.user;
     var password = req.body.pass;
     var roleDosen = getRoles(conn,username);
-    var sql = 'SELECT username, pwd, roles FROM dosen WHERE username =? AND pwd =?';
+    var sql = 'SELECT * FROM dosen WHERE username =? AND pwd =?';
     conn.query(sql, [username,password], (err, results)=>{
         if(err) throw err;
         if(results.length > 0){
             req.session.loggedin = true;
             req.session.username = username;
+            req.session.name = results[0].namaD;
+            req.session.noID = results[0].noDosen;
+            req.session.role = results[0].roles;
             if(results[0].roles == "Admin"){
                 res.redirect('/homeAdmin')
-                console.log(results)
             }
             else if(results[0].roles == "Dosen"){
                 res.redirect('/home')
-                console.log(results)
             }
+            console.log(req.session)
         }
         else{
             req.flash('message', 'Username atau Password anda salah!');

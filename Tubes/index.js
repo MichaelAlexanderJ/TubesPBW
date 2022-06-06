@@ -11,10 +11,13 @@ import flash from 'connect-flash'
 const PORT = 8080;
 const app = express();
 
+const durasi = 1000 * 60;
+
 app.use(session({
 	secret: 'secret',
-	resave: false,
-	saveUninitialized: false
+	resave: true,
+	cookie: {maxAge : durasi},
+	saveUninitialized: true
 }));
 
 app.use(flash())
