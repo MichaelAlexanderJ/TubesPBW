@@ -6,6 +6,17 @@ var route = express.Router();
 
 // query
 
+const getUsers = conn => {
+    return new Promise((resolve,reject) => {
+        conn.query('SELECT * FROM topik', (err,result) => {
+            if(err){
+                reject(err);
+            }else{
+                resolve(result);
+            }
+        });
+    });
+};
 
 const getJudul = (conn,getJudul) => {
     return new Promise((resolve,reject) => {
