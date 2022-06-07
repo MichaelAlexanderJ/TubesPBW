@@ -1,28 +1,32 @@
-
 import express, { query } from 'express';
 import path, { resolve } from 'path';
 import mysql from 'mysql';
 import {route} from './router.js'
 import bodyParser from 'body-parser';
 import session from 'express-session';
+import alert from 'alert';
+import * as popup from 'node-popup';
+import flash from 'connect-flash'
 
 const PORT = 8080;
 const app = express();
-app.use(route)
 
-const publicPath = path.resolve('public');
-app.use(express.static(publicPath));
-
-
-app.set('view engine','ejs');
-
-
+const durasi = 1000 * 60;
 
 app.use(session({
 	secret: 'secret',
 	resave: true,
+	cookie: {maxAge : durasi},
 	saveUninitialized: true
 }));
+
+app.use(route)
+app.use(flash())
+
+const publicPath = path.resolve('public');
+app.use(express.static(publicPath));
+
+app.set('view engine','ejs');
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
