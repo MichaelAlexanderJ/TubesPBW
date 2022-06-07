@@ -33,4 +33,4 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
-}
+})
