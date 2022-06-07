@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/login.css">
-    <title>Document</title>
+    <title>Masuk</title>
 </head>
 <body>
     <header>
@@ -29,12 +29,18 @@
             Universitas Katolik Parahyangan</h1>
     </div>
     <div class="container">
-        <form class="loginForm" action="" method="post">
-                <label for="fname">Username</label><br>
+        <script type="text/javascript">
+            function redirect() { window.location.href='http://localhost:8080/home';}
+        </script>
+        <form class="loginForm" action="/" method="post">
+            <div class="loginAlert">
+                <%= message  %> 
+            </div>
+                <label for="username">Username</label><br>
                 <input type="text" id="name" name="user"><br><br>
-                <label for="lname">Password</label><br>
+                <label for="password">Password</label><br>
                 <input type="password" id="name" name="pass"><br><br><br>
-                <input type="submit" id="button" value="Login">
+                <input type="submit" id="button" onclick="redirect" value="Login">
         </form>
     </div>
 
