@@ -135,7 +135,7 @@ route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     let results = await getTopik(conn);
     conn.release();
-    res.render('dafatarTopik',{
+    res.render('daftarTopik',{
         results
     });
 });
