@@ -44,6 +44,57 @@ const getNameF = (conn,getName) => {
     })
 }
 
+const getMax = conn => {
+    return new Promise((resolve, rejects) =>{
+        conn.query('SELECT MAX(idTopik) as max FROM topik',(err, result) =>{
+            if(err){
+                rejects(err);
+            }else{
+                resolve(result);
+            }
+        });
+    });
+};
+
+const tambahTopik = (conn,idx, judul, bidang, tipeS, noID) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`INSERT INTO topik (idTopik, judulTopik, peminatan, tipe, noDosen, statusSkripsi) VALUES (${idx},'${judul}', '${bidang}','${tipeS}', '${noID}', NULL) `,(err,result) => {
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
+const cekJudulTopik = (conn, cekJudul) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`SELECT judulTopik FROM dosen WHERE judulTopik = '${cekJudul}' `,(err,result) => {
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
+const cekNomorTopik = (conn,cekID) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`SELECT idTopik FROM dosen WHERE idTopik = '${cekID}' `,(err,result) => {
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
 // Connect Database
 
 const pool = mysql.createPool({
@@ -109,13 +160,46 @@ route.get('/', async(req,res) => {
     res.render('login', { message})
     });
 
-
-route.get('/unggahTopik', async(req,res) => {
+route.get('/unggahTopik',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
+    const message = req.flash('message')
     conn.release();
-    res.render('unggahTopik',{
+    if(req.session.loggedin){
+        res.render('unggahTopik', { message
+        });
+    }
+     else {
+        req.flash('message', 'Anda harus login terlebih dahulu');
+        res.redirect('/')
+    }
+});
 
-    });
+route.post('/unggahTopik',express.urlencoded(), async(req,res) => {
+    var idx = req.body.nomor;
+    const noID = req.session.noID;
+    const judul = req.body.judulT;
+    const bidang = req.body.peminatan;
+    const tipeT = req.body.tipeSkripsi;
+    const conn = await dbConnect();
+    const cekJudul = req.query.judulT;
+    if(req.session.loggedin){
+        res.render('unggahTopik', {
+            noID, idx, judul, bidang
+        });
+    }
+     else {
+        req.flash('message', 'Anda harus login terlebih dahulu');
+        res.redirect('/')
+    }
+      
+    if(idx.length > 0 && judul.length > 0 && bidang.length > 0 && tipeT.length > 0){
+        await tambahTopik(conn,idx, judul, bidang, tipeT, noID);
+    }
+    else{
+        req.flash('message', 'Input tidak boleh kosong!');
+        res.redirect('/unggahTopik')
+    }
+    conn.release();
 });
 
 route.get('/skripsiSaya', async(req,res) => {
@@ -168,7 +252,6 @@ route.post('/',express.urlencoded(), async(req,res) => {
             else if(results[0].roles == "Dosen"){
                 res.redirect('/home')
             }
-            console.log(req.session)
         }
         else{
             req.flash('message', 'Username atau Password anda salah!');

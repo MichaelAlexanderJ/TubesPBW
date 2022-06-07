@@ -48,3 +48,12 @@ fieldset{
     align-items: center;
     text-align: center;
 }
+.alert{
+    text-align: center;
+    color: red;
+    background-color: lightgreen;
+    margin-bottom: 20px;
+    border-color: lightgreen;
+    border-radius: 0.5rem;
+    
+}
