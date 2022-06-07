@@ -5,6 +5,19 @@ import mysql from 'mysql';
 var route = express.Router();
 
 // query
+
+const getRoles = (conn, username) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`SELECT roles FROM dosen WHERE username LIKE '%${username}%' `, (err,result) => {
+            if(err){
+                reject(err);
+            }else{
+                resolve(result);
+            }
+        });
+    });
+};
+
 const getUsers = conn => {
     return new Promise((resolve,reject) => {
         conn.query('SELECT * FROM dosen', (err,result) => {
@@ -59,25 +72,41 @@ const dbConnect = () => {
 route.get('/home', async(req,res) => {
     const conn = await dbConnect();
     conn.release();
-    res.render('home', {
-            
-    });
+    var nama = req.session.name;
+    var noID = req.session.noID;
+    var roleD = req.session.role;
+    if(req.session.loggedin){
+        res.render('home', {
+            nama, noID, roleD
+        });
+    } else {
+        req.flash('message', 'Anda harus login terlebih dahulu');
+        res.redirect('/')
+    }
 });
+
 route.get('/homeAdmin', async(req,res) => {
     const conn = await dbConnect();
     conn.release();
-    res.render('homeAdmin', {
-            
-    });
+    var nama = req.session.name;
+    var noID = req.session.noID;
+    var roleD = req.session.role;
+    if(req.session.loggedin){
+        res.render('homeAdmin', {
+            nama, noID, roleD
+        });
+    } else {
+        req.flash('message', 'Anda harus login terlebih dahulu');
+        res.redirect('/')
+    }
 });
 
 route.get('/', async(req,res) => {
     const conn = await dbConnect();
+    const message = req.flash('message')
     conn.release();
-    res.render('login', {
-            
+    res.render('login', { message})
     });
-});
 
 
 route.get('/unggahTopik', async(req,res) => {
@@ -110,28 +139,34 @@ route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
 });
 
 
-// route.post('/',express.urlencoded(),async(req,res) => {
-//     const conn = await dbConnect();
-//     conn.release();
-//     res.redirect('homeAdmin');
-//     console.log(req.body);
-// })
-
 route.post('/',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     var username = req.body.user;
     var password = req.body.pass;
-    var sql = 'SELECT username, pwd FROM dosen WHERE username =? AND pwd =?';
-    conn.query(sql, [username,password], (err, results, fields)=>{
+    var roleDosen = getRoles(conn,username);
+    var sql = 'SELECT * FROM dosen WHERE username =? AND pwd =?';
+    conn.query(sql, [username,password], (err, results)=>{
         if(err) throw err;
-        if(results.length>0){
-            res.redirect('/homeAdmin')
+        if(results.length > 0){
+            req.session.loggedin = true;
+            req.session.username = username;
+            req.session.name = results[0].namaD;
+            req.session.noID = results[0].noDosen;
+            req.session.role = results[0].roles;
+            if(results[0].roles == "Admin"){
+                res.redirect('/homeAdmin')
+            }
+            else if(results[0].roles == "Dosen"){
+                res.redirect('/home')
+            }
+            console.log(req.session)
         }
         else{
-            res.send('Username atau Password anda salah!')
+            req.flash('message', 'Username atau Password anda salah!');
+            res.redirect('/')
         }
+        res.end();
     })
-    conn.release();
 })
 
 export {route};
