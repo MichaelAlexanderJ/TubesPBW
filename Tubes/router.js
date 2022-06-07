@@ -131,7 +131,7 @@ route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
 });
 
 route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
-    const getName = req.query.filter;
+    const getTopik = req.query.filter;
     const conn = await dbConnect();
     let results = await getTopik(conn);
     conn.release();
