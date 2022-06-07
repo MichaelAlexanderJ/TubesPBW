@@ -96,6 +96,14 @@ route.get('/skripsiSaya', async(req,res) => {
     });
 });
 
+route.get('/daftarTopik', async(req,res) => {
+    const conn = await dbConnect();
+    conn.release();
+    res.render('daftarTopik',{
+
+    });
+});
+
 route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
     const getName = req.query.filter;
     const conn = await dbConnect();
