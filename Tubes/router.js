@@ -5,6 +5,19 @@ import mysql from 'mysql';
 var route = express.Router();
 
 // query
+
+const getTopik = conn => {
+    return new Promise((resolve,reject) => {
+        conn.query('SELECT * FROM topik', (err,result) => {
+            if(err){
+                reject(err);
+            }else{
+                resolve(result);
+            }
+        });
+    });
+};
+
 const getUsers = conn => {
     return new Promise((resolve,reject) => {
         conn.query('SELECT * FROM dosen', (err,result) => {
@@ -117,6 +130,15 @@ route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
     });
 });
 
+route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
+    const getName = req.query.filter;
+    const conn = await dbConnect();
+    let results = await getTopik(conn);
+    conn.release();
+    res.render('dafatarTopik',{
+        results
+    });
+});
 
 // route.post('/',express.urlencoded(),async(req,res) => {
 //     const conn = await dbConnect();

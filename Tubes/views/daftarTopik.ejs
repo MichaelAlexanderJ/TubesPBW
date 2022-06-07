@@ -32,13 +32,14 @@
         
         <div class="skripsiSayaMain">
                 <div class="innerMain">
+                    <% for(const row of results) { %>
                     <a class="wrapper" href="">
                         <div class="innerMain1">
                             <div class="icon">
                                 <img src="assets/images/bookIcon.jpg" class="bookIcon" alt="">
                             </div>
                             <div class="textContent">
-                                <h3>Aplikasi Data Mining Untuk Menampilkan Informasi Tingkat Kelulusan Mahasiswa</h3>
+                                <h3><%= row.judulTopik %></h3>
                                 <p>12312</p>
                                 <p>DATA SCIENCE</p>
                             </div>
@@ -48,7 +49,7 @@
                             </div>
                         </div>
                     </a>
-                   
+                    <% } %>
                 </div>
         </div>
     
