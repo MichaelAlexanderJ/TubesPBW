@@ -20,11 +20,12 @@ app.use(session({
 	saveUninitialized: true
 }));
 
-app.use(route)
 app.use(flash())
+app.use(route)
 
 const publicPath = path.resolve('public');
 app.use(express.static(publicPath));
+
 
 app.set('view engine','ejs');
 
@@ -37,4 +38,5 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
+    
 })
