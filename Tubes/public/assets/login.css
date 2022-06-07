@@ -98,6 +98,14 @@ h1{
     border-radius: 0.5rem;
 }
 
+.loginAlert{
+    text-align: center;
+    color: red;
+    background-color: lightgreen;
+    margin-bottom: 20px;
+    border-color: lightgreen;
+    border-radius: 0.5rem;
+}
 
 
 
