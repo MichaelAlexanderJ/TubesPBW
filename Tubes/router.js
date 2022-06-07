@@ -5,6 +5,7 @@ import { flash } from 'express-flash-message';
 
 var route = express.Router();
 
+const resultsPage = 3;
 // query
 
 const getRoles = (conn, username) => {
@@ -43,6 +44,8 @@ const getNameF = (conn,getName) => {
         })
     })
 }
+
+
 
 // Connect Database
 
@@ -137,14 +140,37 @@ route.get('/daftarTopik', async(req,res) => {
 route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
     const getName = req.query.filter;
     const conn = await dbConnect();
-    let results = await getUsers(conn);
+    let sql = 'SELECT * FROM dosen';
     if(getName != undefined && getName.length > 0){
-        results = await getNameF(conn,getName);
+        let results = await getNameF(conn,getName);
+        res.render('kelolaAkun',{
+            results,
+        });
     }
+        conn.query(sql, (err,result) => {
+            if(err) throw err;
+            const numResults = result.length;
+            const numPages = Math.ceil(numResults/resultsPage);
+            let page = req.query.page ? Number(req.query.page) : 1;
+            if(page > numPages){
+                res.redirect('/kelolaAkun?page=' +encodeURIComponent(numPages));
+            } else if (page<1){
+                res.redirect('/kelolaAkun?page=' +encodeURIComponent('1'));
+            }
+            const startLimit = (page-1) * resultsPage;
+    
+            sql = `SELECT * FROM dosen LIMIT ${startLimit},${resultsPage}`;
+            conn.query(sql,(err,result) => {
+                if(err) throw err;
+                let iteration = (page-5) < 1 ? 1 : page-5;
+                let ending = (iteration+9) <= numPages ? (iteration+9) : page + (numPages-page);
+                if(ending < (page+4)){
+                    iteration -= (page+4) - numPages;
+                }
+                res.render('kelolaAkun',{data: result,page,iteration,ending,numPages});
+            })
+        });
     conn.release();
-    res.render('kelolaAkun',{
-        results
-    });
 });
 
 

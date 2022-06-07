@@ -11,7 +11,7 @@ import flash from 'connect-flash'
 const PORT = 8080;
 const app = express();
 
-const durasi = 1000 * 600;
+const durasi = 1000 * 60 * 60 * 1;
 
 app.use(session({
 	secret: 'secret',
@@ -38,5 +38,4 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
-    
 })

@@ -35,17 +35,29 @@
 
         <div class="kelolaAkunMain">
                 <div class="innerMain">
-                    <% for(const row of results) { %>
+                    <% data.forEach(entry => {  %>
                     <a class="wrapper" href="">
                         <div class="innerMain1">
                             <img src="assets/images/adminIcon.jpg" class="adminIcon" alt="">
-                            <h3><%= row.namaD %></h3>
+                            <h3><%= entry.namaD %></h3>
                             <div class="containerButton">
                                 <input type="submit" id="buttonEdit" onclick="redirect" value="Edit">
                             </div>
                         </div>
                     </a>
-                    <% } %>
+                    <% }) %>
+                    <br>
+                    <div class="paginationPage">
+                        <% if(page > 1) { %> <a href="/kelolaAkun?page=<%=page-1%>">Before</a> <% } %>
+                        <% for(let i = iteration; i <= ending; i++) { %>
+                            <% if(i === page) { %>
+                                <a class="selectedLink" href="/kelolaAkun?page=<%=i%>"><%=i%></a>
+                                <% continue; %>
+                             <% } %>
+                                 <a href="/kelolaAkun?page=<%=i%>"><%=i%></a>
+                                 <% } %>
+                                 <% if(page < numPages) { %> <a href="/kelolaAkun?page=<%=page+1%>">After</a> <% } %>
+                    </div>
                 </div>
         </div>
     
