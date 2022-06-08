@@ -58,7 +58,20 @@ const getMax = conn => {
 
 const tambahTopik = (conn,idx, judul, bidang, tipeS, noID) => {
     return new Promise((resolve,reject) => {
-        conn.query(`INSERT INTO topik (idTopik, judulTopik, peminatan, tipe, noDosen, statusSkripsi) VALUES (${idx},'${judul}', '${bidang}','${tipeS}', '${noID}', NULL) `,(err,result) => {
+        conn.query(`INSERT INTO topik (idTopik, judulTopik, peminatan, tipe, noDosen, statusSkripsi) VALUES (${idx},'${judul}', '${bidang}','${tipeS}', '${noID}', "NULL") `,(err,result) => {
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
+const topikDosen = (conn,noID) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`SELECT idTopik, judulTopik, peminatan, tipe, statusSkripsi FROM topik WHERE noDosen LIKE '%${noID}%' `,(err,result) => {
             if(err){
                 reject(err);
             }
@@ -174,10 +187,12 @@ route.post('/unggahTopik',express.urlencoded(), async(req,res) => {
 });
 
 route.get('/skripsiSaya', async(req,res) => {
+    const noID = req.session.noID;
     const conn = await dbConnect();
+    let results = await topikDosen(conn, noID);
     conn.release();
     res.render('topikSkripsiSaya',{
-
+        results
     });
 });
 
