@@ -193,6 +193,24 @@ route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
                 conn.release();
         });
 
+route.post('/kelolaAkun',express.urlencoded(),async(req,res)=>{
+    const conn = await dbConnect();
+    const data = req.query.namaDosen;
+    console.log(data)
+    let results = await getNameF(conn,data);
+    console.log(results);
+    if(req.session.loggedin){
+        res.render('kelolaAkunLanjutan',{
+            data
+        })
+    }
+    else{
+        req.flash('message','anda harus login terlebih dahulu')
+        res.redirect('/');
+    }
+
+});
+
 route.get('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
     const conn = await dbConnect();
     conn.release();

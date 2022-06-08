@@ -39,9 +39,11 @@
                     <a class="wrapper" href="">
                         <div class="innerMain1">
                             <img src="assets/images/adminIcon.jpg" class="adminIcon" alt="">
-                            <h3><%= entry.namaD %></h3>
+                            <h3 name="namaDosen" ><%= entry.namaD %></h3>
                             <div class="containerButton">
-                                <input type="submit" id="buttonEdit" onclick="redirect" value="Edit">
+                                <form action="" class="submitEdit" method="post">
+                                    <input type="submit" id="buttonEdit" value="Edit">
+                                </form>
                             </div>
                         </div>
                     </a>
