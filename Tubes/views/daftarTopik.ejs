@@ -20,13 +20,14 @@
         <br>
         <div class="skripsiSayaMain">
             <div class="innerMain">
+                <% for(const row of results) { %> 
                 <a href="" class="wrapper">
                     <div class="innerMain1">
                         <div class="icon">
                             <img src="assets/images/bookIcon.jpg" class="bookIcon" alt="">
                         </div>
                         <div class="textContent">
-                            <h3>blablablabla</h3>
+                            <h3><%= row.judulTopik %></h3>
                             <p>1231</p>
                             <p>DATA SCIENCE</p>
                         </div>
@@ -36,6 +37,7 @@
                         </div>
                     </div>
                 </a>
+                <% } %> 
             </div>
         </div>
     </div>

@@ -1,11 +1,24 @@
-import express from 'express';
+import express, { query } from 'express';
 import path, { resolve } from 'path';
 import mysql from 'mysql';
 import { flash } from 'express-flash-message';
+import { get } from 'http';
 
 var route = express.Router();
 
 // query
+
+const getTopik = conn => {
+    return new Promise((resolve, reject) => {
+        conn.query('SELECT * FROM topik', (err, result)=> {
+            if(err){
+                reject(err);
+            }else{
+                resolve(result);
+            }
+        });
+    });
+};
 
 const getRoles = (conn, username) => {
     return new Promise((resolve,reject) => {
@@ -128,9 +141,10 @@ route.get('/skripsiSaya', async(req,res) => {
 
 route.get('/daftarTopik', async(req,res) => {
     const conn = await dbConnect();
+    let results = await getTopik(conn)
     conn.release();
     res.render('daftarTopik',{
-
+        results
     });
 });
 
@@ -146,6 +160,7 @@ route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
         results
     });
 });
+
 
 
 route.post('/',express.urlencoded(), async(req,res) => {
