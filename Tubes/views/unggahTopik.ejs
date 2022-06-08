@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unggah Topik</title>
     <link rel="stylesheet" href="assets/unggahTopik.css">
+    <script src="script.js"></script>
 </head>
 <body>
     <header>
@@ -26,12 +27,9 @@
             
             <div class="formUnggah">
                 <div class="alert">
-                    <%= message  %> 
                 </div>
-                <form method = POST action="">
+                <form method = POST action="/unggahTopik">
                     <fieldset>
-                        <label for="nomor">Nomor</label>
-                        <input type="number" class="nomor" name = "nomor">
                         <label for="Judul" class="judul" >Judul</label>
                         <input type="text" name = "judulT">
                         <label for="bidangPeminatan">Bidang Peminatan</label>
@@ -47,7 +45,7 @@
                         <label for="UploadFile">Upload File</label>
                         <input type="file" id="fileSkripsi">
                         <br>
-                        <input type="submit" class="submitSkripsi">
+                        <input type="submit" class="submitSkripsi" onclick="cekInput()">
                     </fieldset>
                 </form>
             </div>

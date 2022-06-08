@@ -69,32 +69,6 @@ const tambahTopik = (conn,idx, judul, bidang, tipeS, noID) => {
     })
 }
 
-const cekJudulTopik = (conn, cekJudul) => {
-    return new Promise((resolve,reject) => {
-        conn.query(`SELECT judulTopik FROM dosen WHERE judulTopik = '${cekJudul}' `,(err,result) => {
-            if(err){
-                reject(err);
-            }
-            else{
-                resolve(result);
-            }
-        })
-    })
-}
-
-const cekNomorTopik = (conn,cekID) => {
-    return new Promise((resolve,reject) => {
-        conn.query(`SELECT idTopik FROM dosen WHERE idTopik = '${cekID}' `,(err,result) => {
-            if(err){
-                reject(err);
-            }
-            else{
-                resolve(result);
-            }
-        })
-    })
-}
-
 // Connect Database
 
 const pool = mysql.createPool({
@@ -175,16 +149,17 @@ route.get('/unggahTopik',express.urlencoded(), async(req,res) => {
 });
 
 route.post('/unggahTopik',express.urlencoded(), async(req,res) => {
-    var idx = req.body.nomor;
-    const noID = req.session.noID;
+    
+    const noID = req.session.noID; //Buat dapetin noDosen
     const judul = req.body.judulT;
     const bidang = req.body.peminatan;
     const tipeT = req.body.tipeSkripsi;
     const conn = await dbConnect();
-    const cekJudul = req.query.judulT;
+    var maxID = await getMax(conn); //Buat dapetin IdTopik terbesar di DB
+    var idx = maxID[0].max+1;
     if(req.session.loggedin){
         res.render('unggahTopik', {
-            noID, idx, judul, bidang
+            noID, idx, judul, bidang, tipeT
         });
     }
      else {
@@ -192,12 +167,8 @@ route.post('/unggahTopik',express.urlencoded(), async(req,res) => {
         res.redirect('/')
     }
       
-    if(idx.length > 0 && judul.length > 0 && bidang.length > 0 && tipeT.length > 0){
+    if(judul.length > 0 && bidang.length > 0 && tipeT.length > 0){
         await tambahTopik(conn,idx, judul, bidang, tipeT, noID);
-    }
-    else{
-        req.flash('message', 'Input tidak boleh kosong!');
-        res.redirect('/unggahTopik')
     }
     conn.release();
 });

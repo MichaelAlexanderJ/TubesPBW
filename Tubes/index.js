@@ -11,7 +11,7 @@ import flash from 'connect-flash'
 const PORT = 8080;
 const app = express();
 
-const durasi = 1000 * 60;
+const durasi = 10000 * 60;
 
 app.use(session({
 	secret: 'secret',
