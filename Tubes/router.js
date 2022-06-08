@@ -5,7 +5,6 @@ import { flash } from 'express-flash-message';
 
 var route = express.Router();
 
-let resultsPage = 3;
 // query
 
 const getRoles = (conn, username) => {
@@ -166,7 +165,7 @@ route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     let results = await getUsersPage(conn);
     const numResults = results.length;
-
+    let resultsPage = 3;
     const numPages = Math.ceil(numResults/resultsPage);
     let page = req.query.page ? Number(req.query.page) : 1;
     if(page > numPages){
@@ -177,24 +176,30 @@ route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
     let startLimit = (page-1) * resultsPage;
 
     results = await getUsersPage2(conn,startLimit,resultsPage);
-        let iteration = (page-5) < 1 ? 1 : page-5;
-        let ending = (iteration+9) <= numPages ? (iteration+9) : page + (numPages-page);
-        if(ending < (page+4)){
-            iteration -= (page+4) - numPages;
+        let iteration = (page-3) < 1 ? 1 : page-3;
+        let ending = (iteration+7) <= numPages ? (iteration+7) : page + (numPages-page);
+        if(ending < (page+1)){
+            iteration -= (page+1) - numPages;
         }
         res.render('kelolaAkun',{results : results,page,iteration,ending,numPages});
-
     //search filter
     if(getName != undefined && getName.length > 0){
         results = await getNameF(conn,getName);
+        console.log(results)
         res.render('kelolaAkun',{
-            results : results
+            results : results,page,iteration,ending,numPages
         });
     }
                 conn.release();
         });
 
-
+route.get('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
+    const conn = await dbConnect();
+    conn.release();
+    res.render('kelolaAkunLanjutan', {
+        
+    });
+});
 
 
 route.post('/',express.urlencoded(), async(req,res) => {
