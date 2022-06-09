@@ -181,14 +181,28 @@ route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
         if(ending < (page+1)){
             iteration -= (page+1) - numPages;
         }
-        res.render('kelolaAkun',{results : results,page,iteration,ending,numPages});
+        if(req.session.loggedin){
+            res.render('kelolaAkun',{
+                results : results,page,iteration,ending,numPages
+            })
+        }
+        else{
+            req.flash('message','anda harus login terlebih dahulu')
+            res.redirect('/');
+        }
     //search filter
     if(getName != undefined && getName.length > 0){
         results = await getNameF(conn,getName);
         console.log(results)
-        res.render('kelolaAkun',{
-            results : results,page,iteration,ending,numPages
-        });
+        if(req.session.loggedin){
+            res.render('kelolaAkun',{
+                results : results,page,iteration,ending,numPages
+            })
+        }
+        else{
+            req.flash('message','anda harus login terlebih dahulu')
+            res.redirect('/');
+        }
     }
                 conn.release();
         });
