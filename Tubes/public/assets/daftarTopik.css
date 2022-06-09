@@ -105,23 +105,12 @@ fieldset{
 /* CSS Bagian inner1 Container bagian status */
 
 .bagianStatus {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    margin-left: 3 0%;
-=======
-    margin-left: 0%;
->>>>>>> 3c61199448c56c4f0cafb0cc8da79dc9333c5854
-=======
-    margin-left: 0%;
->>>>>>> 3c61199448c56c4f0cafb0cc8da79dc9333c5854
+     margin-left: 35%;
 }
 
 .bagianStatus p{
-<<<<<<< Updated upstream
     padding-right: 100%;
-=======
     padding-right: 40%;
->>>>>>> Stashed changes
 }
 
 .status{
