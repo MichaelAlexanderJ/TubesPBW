@@ -214,9 +214,7 @@ route.post('/kelolaAkun',express.urlencoded(),async(req,res)=>{
     let results = await getNameF(conn,data);
     console.log(results);
     if(req.session.loggedin){
-        res.render('kelolaAkunLanjutan',{
-
-        })
+        res.redirect('kelolaAkunLanjutan');
     }
     else{
         req.flash('message','anda harus login terlebih dahulu')
@@ -238,6 +236,19 @@ route.get('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
         res.redirect('/');
     }
 });
+
+route.post('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
+    const conn = await dbConnect();
+    const akunDiganti = req.body.gantiAkun;
+    const namaDiganti = req.body.gantiNama
+    const usernameDiganti = req.body.gantiUsername;
+    const passwordDiganti = req.body.gantiPassword;
+    const noDosenDiganti = req.body.gantiNoDosen;
+    let results = await getNameF(conn,akunDiganti);
+    console.log(results);
+
+    conn.release();
+})
 
 
 route.post('/',express.urlencoded(), async(req,res) => {

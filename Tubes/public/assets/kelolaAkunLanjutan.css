@@ -141,9 +141,6 @@ fieldset{
     display: flex;
     flex-direction: column;
 }
-.akunDiganti{
-    margin-left: 24%;
-}
 
 #gantiNama{
     margin-top: 1rem;
