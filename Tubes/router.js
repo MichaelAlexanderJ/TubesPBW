@@ -163,7 +163,7 @@ route.post('/unggahTopik',express.urlencoded(), async(req,res) => {
             noID, idx, judul, bidang, tipeT
         });
     }
-     else {
+    else{
         req.flash('message', 'Anda harus login terlebih dahulu');
         res.redirect('/')
     }
