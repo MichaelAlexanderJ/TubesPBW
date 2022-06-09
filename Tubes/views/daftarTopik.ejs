@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/daftarTopik.css">
-    <title>Topik Skripsi Saya</title>
+    <title>Daftar Topik Skripsi</title>
 </head>
 <body>
     <header>
@@ -14,7 +14,7 @@
     <div class="skripsiSayaContainer">
         <div class="skripsiSayaTop">
             <h3>Icon</h3>
-            <h3>Topik Skripsi Saya</h3>
+            <h3>Daftar Topik Skripsi</h3>
             <p class="dueDateUnggah">Due/05/2022</p>
         </div>
         <br>
@@ -28,12 +28,16 @@
                         </div>
                         <div class="textContent">
                             <h3><%= row.judulTopik %></h3>
-                            <p>1231</p>
+                            <p><%= row.idTopik %></p>
+<<<<<<< HEAD
                             <p>DATA SCIENCE</p>
+=======
+                            <p><%= row.peminatan %></p>
+>>>>>>> 3c61199448c56c4f0cafb0cc8da79dc9333c5854
                         </div>
                         <div class="bagianStatus">
-                            <p>status</p>
-                            <p class="status">YES</p>
+                            <p>Status</p>
+                            <p class="status"><%= row.statusSkripsi %></p>
                         </div>
                     </div>
                 </a>
