@@ -142,5 +142,11 @@ fieldset{
     flex-direction: column;
 }
 .akunDiganti{
-    margin-left: 28%;
+    margin-left: 24%;
 }
+
+#gantiNama{
+    margin-top: 1rem;
+}
+
+
