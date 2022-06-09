@@ -20,6 +20,18 @@ const getTopik = conn => {
     });
 };
 
+const getStatus = conn => {
+    return new Promise((resolve, reject) => {
+        conn.query('SELECT * FROM statuss', (err, result)=> {
+            if(err){
+                reject(err);
+            }else{
+                resolve(result);
+            }
+        });
+    });
+}
+
 const getRoles = (conn, username) => {
     return new Promise((resolve,reject) => {
         conn.query(`SELECT roles FROM dosen WHERE username LIKE '%${username}%' `, (err,result) => {
@@ -133,9 +145,10 @@ route.get('/unggahTopik', async(req,res) => {
 
 route.get('/skripsiSaya', async(req,res) => {
     const conn = await dbConnect();
+    let results = await getStatus(conn)
     conn.release();
     res.render('topikSkripsiSaya',{
-
+        results
     });
 });
 

@@ -16,6 +16,17 @@
             <h3>Icon</h3>
             <h3>Daftar Topik Skripsi</h3>
             <p class="dueDateUnggah">Due/05/2022</p>
+
+            <div class="searchTopik">
+                <form method="GET" action="/daftarTopik">
+                    <fieldset>
+                        <legend>Search by Title</legend>
+                        <input type="text" name="filter" value="<%= %>">
+                        <input type="submit" class="submitAkun" value="SEARCH">
+                    </fieldset>
+                </form>
+            </div>
+            
         </div>
         <br>
         <div class="skripsiSayaMain">
