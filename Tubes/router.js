@@ -2,6 +2,7 @@ import express from 'express';
 import path, { resolve } from 'path';
 import mysql from 'mysql';
 import { flash } from 'express-flash-message';
+import alert from 'alert';
 
 var route = express.Router();
 
@@ -10,6 +11,18 @@ var route = express.Router();
 const getUsers = conn => {
     return new Promise((resolve,reject) => {
         conn.query('SELECT * FROM dosen', (err,result) => {
+            if(err){
+                reject(err);
+            }else{
+                resolve(result);
+            }
+        });
+    });
+};
+
+const checkLogin = (conn, username, password) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`SELECT username, pwd FROM dosen WHERE username LIKE '%${username}%' AND pwd LIKE '%${password}%'`, (err,result) => {
             if(err){
                 reject(err);
             }else{
@@ -134,6 +147,7 @@ route.get('/', async(req,res) => {
     conn.release();
     res.render('login', { message})
     });
+    
 
 route.get('/unggahTopik',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
@@ -144,7 +158,6 @@ route.get('/unggahTopik',express.urlencoded(), async(req,res) => {
         });
     }
      else {
-        req.flash('message', 'Anda harus login terlebih dahulu');
         res.redirect('/')
     }
 });
@@ -164,8 +177,8 @@ route.post('/unggahTopik',express.urlencoded(), async(req,res) => {
         });
     }
     else{
-        req.flash('message', 'Anda harus login terlebih dahulu');
-        res.redirect('/')
+        // req.flash('message', 'Anda harus login terlebih dahulu');
+        // res.redirect('/')
     }
       
     if(judul.length > 0 && bidang.length > 0 && tipeT.length > 0){
@@ -208,6 +221,7 @@ route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
 
 route.post('/',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
+    let cekLogin = await checkLogin(conn, username, password);
     var username = req.body.user;
     var password = req.body.pass;
     var sql = 'SELECT * FROM dosen WHERE username =? AND pwd =?';
@@ -226,8 +240,12 @@ route.post('/',express.urlencoded(), async(req,res) => {
                 res.redirect('/home')
             }
         }
+        else if(username = "" || password == ""){
+            req.flash('message', 'Username atau Password Tidak Boleh Kosong!');
+            res.redirect('/')
+        }
         else{
-            req.flash('message', 'Username atau Password anda salah!');
+            req.flash('message', 'Username atau Password Anda salah!');
             res.redirect('/')
         }
         res.end();

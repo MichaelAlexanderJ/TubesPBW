@@ -26,11 +26,12 @@
             
             <div class="formUnggah">
                 <div class="alert">
+                    <%=   %> 
                 </div>
                 <form method = POST action="/unggahTopik" id = "tambahTopik">
                     <fieldset>
                         <label for="Judul" class="judul" >Judul</label>
-                        <input type="text" name = "judulT">
+                        <input type="text" name = "judulT" id ="judulT">
                         <label for="bidangPeminatan">Bidang Peminatan</label>
                         <select name="peminatan" id="">
                             <option value="Data Science">Data Science</option>
@@ -44,14 +45,26 @@
                         <label for="UploadFile">Upload File</label>
                         <input type="file" id="fileSkripsi">
                         <br>
-                        <input type="submit" class="submitSkripsi" onclick="">
+                        <input type="submit" class="submitSkripsi" onclick="cekInputJudul()">
                     </fieldset>
                 </form>
             </div>
         </div>
 
     </div>
-
+    <script lang="javascript">
+        function cekInputJudul() {
+            var cekJudul = document.getElementById("judulT").value;
+            }
+            if (cekJudul != ""){
+                alert("Berhasil Mengunggah Topik!");
+        }
+        else{
+            alert("Input tidak boleh kosong!")
+        }
+    
+        
+    </script>
     <footer>
         <%- include('./layout/footer.ejs') %>
     </footer>
