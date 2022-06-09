@@ -215,7 +215,7 @@ route.post('/kelolaAkun',express.urlencoded(),async(req,res)=>{
     console.log(results);
     if(req.session.loggedin){
         res.render('kelolaAkunLanjutan',{
-            data
+            
         })
     }
     else{
