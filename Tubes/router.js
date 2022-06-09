@@ -7,18 +7,6 @@ var route = express.Router();
 
 // query
 
-const getRoles = (conn, username) => {
-    return new Promise((resolve,reject) => {
-        conn.query(`SELECT roles FROM dosen WHERE username LIKE '%${username}%' `, (err,result) => {
-            if(err){
-                reject(err);
-            }else{
-                resolve(result);
-            }
-        });
-    });
-};
-
 const getUsers = conn => {
     return new Promise((resolve,reject) => {
         conn.query('SELECT * FROM dosen', (err,result) => {
@@ -222,7 +210,6 @@ route.post('/',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     var username = req.body.user;
     var password = req.body.pass;
-    var roleDosen = getRoles(conn,username);
     var sql = 'SELECT * FROM dosen WHERE username =? AND pwd =?';
     conn.query(sql, [username,password], (err, results)=>{
         if(err) throw err;
