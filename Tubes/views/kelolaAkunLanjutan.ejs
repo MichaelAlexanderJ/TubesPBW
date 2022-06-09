@@ -26,11 +26,14 @@
     
             <div class="kelolaAkunMain">
                     <div class="innerMain">
-                        <a class="wrapper" href="">
                             <div class="innerMain1">
-                                <img src="assets/images/adminIcon.jpg" class="adminIcon" alt="">
-                                <h3><%= entry.namaD %></h3>
-                                <form action="" method="post">
+                                <fieldset class="fieldGantiAkun">
+                                    <form action="" method="" class="masukinUsername">
+                                        <h3>Masukan username akun yang ingin diganti</h3>
+                                        <input type="text" class="akunDiganti">
+                                    </form>
+                                </fieldset>
+                                <form action="" method="">
                                     <fieldset>
                                         <label for="">Change Name</label>
                                         <input type="text" class="gantiNama">
@@ -42,11 +45,7 @@
                                         <input type="text" class="gantiPassword">
                                     </fieldset>
                                 </form>
-                                <div class="containerButton">
-                                    <input type="submit" id="buttonEdit" onclick="redirect" value="Edit">
-                                </div>
                             </div>
-                        </a>
                     </div>
             </div>
         

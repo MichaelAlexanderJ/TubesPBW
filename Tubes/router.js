@@ -215,7 +215,7 @@ route.post('/kelolaAkun',express.urlencoded(),async(req,res)=>{
     console.log(results);
     if(req.session.loggedin){
         res.render('kelolaAkunLanjutan',{
-            data
+
         })
     }
     else{
@@ -228,9 +228,15 @@ route.post('/kelolaAkun',express.urlencoded(),async(req,res)=>{
 route.get('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
     const conn = await dbConnect();
     conn.release();
-    res.render('kelolaAkunLanjutan', {
-        
-    });
+    if(req.session.loggedin){
+        res.render('kelolaAkunLanjutan',{
+
+        })
+    }
+    else{
+        req.flash('message','anda harus login terlebih dahulu')
+        res.redirect('/');
+    }
 });
 
 

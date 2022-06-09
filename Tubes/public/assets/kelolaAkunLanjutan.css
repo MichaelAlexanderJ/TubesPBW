@@ -34,7 +34,9 @@
 }
 
 .kelolaAkunTop h3{
-    margin-left: 1rem;
+   text-align: center;
+   align-items: center;
+   margin-right: 45%;
 }
 
 /* CSS Bagian Container skripsiSayaMain */
@@ -55,16 +57,18 @@
 }
 
 label{
-    color: white;
+    color: black;
     margin: 1rem 0rem 1rem 0rem;
 }
 fieldset{
+    margin: 1rem;
     display: flex;
     flex-direction: column;
     border: solid 0.1rem white;
 }
 
 .innerMain{
+    padding: 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -131,4 +135,12 @@ fieldset{
     display: flex;
     flex-direction: column;
     border: solid 0.1rem white;
+}
+
+.fieldGantiAkun{
+    display: flex;
+    flex-direction: column;
+}
+.akunDiganti{
+    margin-left: 28%;
 }
