@@ -44,6 +44,19 @@ const getNameF = (conn,getName) => {
     })
 }
 
+const getUsername = (conn,akunDiganti) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`SELECT * FROM dosen WHERE username LIKE '%${akunDiganti}%' `,(err,result) => {
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
 const getUsersPage = conn => {
     return new Promise((resolve,reject) =>{
         conn.query('SELECT * FROM dosen',(err,result) => {
@@ -209,10 +222,6 @@ route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
 
 route.post('/kelolaAkun',express.urlencoded(),async(req,res)=>{
     const conn = await dbConnect();
-    const data = req.query.namaDosen;
-    console.log(data)
-    let results = await getNameF(conn,data);
-    console.log(results);
     if(req.session.loggedin){
         res.redirect('kelolaAkunLanjutan');
     }
@@ -239,12 +248,13 @@ route.get('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
 
 route.post('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
     const conn = await dbConnect();
-    const akunDiganti = req.body.gantiAkun;
+    let akunDiganti = req.body.akunGanti;
+    console.log(akunDiganti)
     const namaDiganti = req.body.gantiNama
     const usernameDiganti = req.body.gantiUsername;
     const passwordDiganti = req.body.gantiPassword;
     const noDosenDiganti = req.body.gantiNoDosen;
-    let results = await getNameF(conn,akunDiganti);
+    let results = await getUsername(conn,akunDiganti);
     console.log(results);
 
     conn.release();
