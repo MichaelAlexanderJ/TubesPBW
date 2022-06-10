@@ -72,6 +72,45 @@ const updateNama = (conn,namaDiganti,results) => {
     })
 }
 
+const updatePassword = (conn,passwordDiganti,results) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`UPDATE Dosen SET password = '%${passwordDiganti}%' WHERE password = '%${results[0].password}%'`,(err,result) =>{
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
+const updateNoDosen = (conn,noDosenDiganti,results) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`UPDATE Dosen SET password = '%${noDosenDiganti}%' WHERE password = '%${results[0].password}%'`,(err,result) =>{
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
+const updateUsername = (conn,usernameDiganti,results) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`UPDATE Dosen SET password = '%${usernameDiganti}%' WHERE password = '%${results[0].password}%'`,(err,result) =>{
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
 const getUsersPage = conn => {
     return new Promise((resolve,reject) =>{
         conn.query('SELECT * FROM dosen',(err,result) => {
@@ -269,7 +308,18 @@ route.post('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
     const usernameDiganti = req.body.gantiUsername;
     const passwordDiganti = req.body.gantiPassword;
     const noDosenDiganti = req.body.gantiNoDosen;
-    const updateNamaDatabase = await updateNama(conn,akunDiganti,results);
+    if(namaDiganti.length > 0){
+        await updateNama(conn,namaDiganti,results);
+    }
+    if(passwordDiganti.length > 0){
+        await updatePassword(conn,passwordDiganti,results);
+    }
+    if(noDosenDiganti.length > 0){
+        await updateNoDosen(conn,noDosenDiganti,results);
+    }
+    if(usernameDiganti.length > 0){
+        await updateUsername(conn,usernameDiganti,results);
+    }
     console.log(results);
 
     conn.release();
