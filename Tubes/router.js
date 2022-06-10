@@ -44,9 +44,24 @@ const getNameF = (conn,getName) => {
     })
 }
 
+//query kelola akun
+
 const getUsername = (conn,akunDiganti) => {
     return new Promise((resolve,reject) => {
         conn.query(`SELECT * FROM dosen WHERE username LIKE '%${akunDiganti}%' `,(err,result) => {
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
+const updateNama = (conn,namaDiganti,results) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`UPDATE Dosen SET namaD = '%${namaDiganti}%' WHERE namaD = '%${results[0].namaD}%'`,(err,result) =>{
             if(err){
                 reject(err);
             }
@@ -249,12 +264,12 @@ route.get('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
 route.post('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
     const conn = await dbConnect();
     let akunDiganti = req.body.akunGanti;
-    console.log(akunDiganti)
+    let results = await getUsername(conn,akunDiganti);
     const namaDiganti = req.body.gantiNama
     const usernameDiganti = req.body.gantiUsername;
     const passwordDiganti = req.body.gantiPassword;
     const noDosenDiganti = req.body.gantiNoDosen;
-    let results = await getUsername(conn,akunDiganti);
+    const updateNamaDatabase = await updateNama(conn,akunDiganti,results);
     console.log(results);
 
     conn.release();
