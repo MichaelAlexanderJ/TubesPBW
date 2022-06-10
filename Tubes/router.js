@@ -61,7 +61,7 @@ const getUsername = (conn,akunDiganti) => {
 
 const updateNama = (conn,namaDiganti,results) => {
     return new Promise((resolve,reject) => {
-        conn.query(`UPDATE Dosen SET namaD = '%${namaDiganti}%' WHERE namaD = '%${results[0].namaD}%'`,(err,result) =>{
+        conn.query(`UPDATE Dosen SET namaD = '${namaDiganti}' WHERE namaD LIKE '%${results[0].namaD}%'`,(err,result) =>{
             if(err){
                 reject(err);
             }
@@ -74,7 +74,7 @@ const updateNama = (conn,namaDiganti,results) => {
 
 const updatePassword = (conn,passwordDiganti,results) => {
     return new Promise((resolve,reject) => {
-        conn.query(`UPDATE Dosen SET password = '%${passwordDiganti}%' WHERE password = '%${results[0].password}%'`,(err,result) =>{
+        conn.query(`UPDATE Dosen SET password = '%${passwordDiganti}%' WHERE pwd = '%${results[0].pwd}%'`,(err,result) =>{
             if(err){
                 reject(err);
             }
@@ -87,7 +87,7 @@ const updatePassword = (conn,passwordDiganti,results) => {
 
 const updateNoDosen = (conn,noDosenDiganti,results) => {
     return new Promise((resolve,reject) => {
-        conn.query(`UPDATE Dosen SET password = '%${noDosenDiganti}%' WHERE password = '%${results[0].password}%'`,(err,result) =>{
+        conn.query(`UPDATE Dosen SET password = '%${noDosenDiganti}%' WHERE noDosen = '%${results[0].noDosen}%'`,(err,result) =>{
             if(err){
                 reject(err);
             }
@@ -100,7 +100,7 @@ const updateNoDosen = (conn,noDosenDiganti,results) => {
 
 const updateUsername = (conn,usernameDiganti,results) => {
     return new Promise((resolve,reject) => {
-        conn.query(`UPDATE Dosen SET password = '%${usernameDiganti}%' WHERE password = '%${results[0].password}%'`,(err,result) =>{
+        conn.query(`UPDATE Dosen SET password = '%${usernameDiganti}%' WHERE username = '%${results[0].username}%'`,(err,result) =>{
             if(err){
                 reject(err);
             }
@@ -308,6 +308,7 @@ route.post('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
     const usernameDiganti = req.body.gantiUsername;
     const passwordDiganti = req.body.gantiPassword;
     const noDosenDiganti = req.body.gantiNoDosen;
+    console.log(namaDiganti);
     if(namaDiganti.length > 0){
         await updateNama(conn,namaDiganti,results);
     }
