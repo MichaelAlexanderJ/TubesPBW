@@ -45,12 +45,14 @@
                         </div>
                         <div class="editButton">
                             <div>
-                                <h3><%= row.statusSkripsi %> </h3>
-                                
+                                <p>Status: <b><%= row.statusSkripsi %></b> </p>
                                     <select name="gantiStat">
+                                        <option selected value="<%= row.statusSkripsi %>"> </option>
                                         <option value="OK" name="OK">OK</option>
-                                        <option value="NULL" name="NULL">NULL</option>
+                                        <option value="NO" name="NO">NO</option>
+                                        <option value="INQ" name="INQ">INQ</option>
                                     </select>
+                                    <br>
                                     <input type="hidden" name ="noTopik" value="<%= row.idTopik %>">
                                     <input type="submit" name="updateStat" onclick="redirect" value="Ganti Status">
                                 </form>

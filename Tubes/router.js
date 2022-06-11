@@ -155,10 +155,16 @@ route.get('/skripsiSaya', async(req,res) => {
 route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     let results = await getTopik(conn)
+    if(req.session.loggedin){
+        res.render('daftarTopik',{
+            results
+        });
+    }else{
+        req.flash('message', 'Anda harus login terlebih dahulu');
+        res.redirect('/')
+    }
+    
     conn.release();
-    res.render('daftarTopik',{
-        results
-    });
 });
 
 route.post('/daftarTopik',express.urlencoded(), async(req,res) => {
@@ -166,10 +172,11 @@ route.post('/daftarTopik',express.urlencoded(), async(req,res) => {
     const ubahStat = req.body.gantiStat;
     const idTopik = req.body.noTopik
     var sql = `UPDATE topik SET statusSkripsi = '${ubahStat}' WHERE idTopik ='${idTopik}'`
-    conn.query(sql, [ubahStat], ()=>{
+    conn.query(sql, [ubahStat,idTopik], ()=>{
         res.redirect('/daftarTopik')
         res.end();
     })
+    conn.release();
 });
 
 
