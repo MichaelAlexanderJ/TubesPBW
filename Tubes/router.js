@@ -152,7 +152,7 @@ route.get('/skripsiSaya', async(req,res) => {
     });
 });
 
-route.get('/daftarTopik', async(req,res) => {
+route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     let results = await getTopik(conn)
     conn.release();
@@ -164,15 +164,14 @@ route.get('/daftarTopik', async(req,res) => {
 route.post('/daftarTopik',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     const ubahStat = req.body.gantiStat;
-    let results = await getTopik(conn)
-    const getNoTopik = results.idTopik;
-    var sql = `UPDATE topik SET statusSkripsi = '${ubahStat}' WHERE idTopik ='${results[0].idTopik}'`
+    const idTopik = req.body.noTopik
+    var sql = `UPDATE topik SET statusSkripsi = '${ubahStat}' WHERE idTopik ='${idTopik}'`
     conn.query(sql, [ubahStat], ()=>{
         res.redirect('/daftarTopik')
+        res.end();
     })
-    
-    console.log(results.length)
 });
+
 
 route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
     const getName = req.query.filter;

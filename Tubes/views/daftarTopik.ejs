@@ -38,22 +38,21 @@
                             <img src="assets/images/bookIcon.jpg" class="bookIcon" alt="">
                         </div>
                         <div class="textContent">
+                            <form action="/daftarTopik" method="post">
                             <h3><%= row.judulTopik %></h3>
-                            <p name="noTopik"><%= row.idTopik %></p>
-                            <p>DATA SCIENCE</p>
                             <p><%= row.idTopik %></p>
                             <p><%= row.peminatan %></p>
                         </div>
                         <div class="editButton">
                             <div>
                                 <h3><%= row.statusSkripsi %> </h3>
-                                <form action="/daftarTopik" method="post">
+                                
                                     <select name="gantiStat">
-                                        <option selected="selected"><%= row.statusSkripsi %></option>
                                         <option value="OK" name="OK">OK</option>
                                         <option value="NULL" name="NULL">NULL</option>
                                     </select>
-                                    <input type="submit" onclick="redirect" value="Ganti Status">
+                                    <input type="hidden" name ="noTopik" value="<%= row.idTopik %>">
+                                    <input type="submit" name="updateStat" onclick="redirect" value="Ganti Status">
                                 </form>
                                 
                             </div>
