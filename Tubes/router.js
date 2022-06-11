@@ -10,7 +10,7 @@ var route = express.Router();
 
 const getTopik = conn => {
     return new Promise((resolve, reject) => {
-        conn.query('SELECT * FROM topik', (err, result)=> {
+        conn.query('SELECT * FROM topik'    , (err, result)=> {
             if(err){
                 reject(err);
             }else{
@@ -161,6 +161,19 @@ route.get('/daftarTopik', async(req,res) => {
     });
 });
 
+route.post('/daftarTopik',express.urlencoded(), async(req,res) => {
+    const conn = await dbConnect();
+    const ubahStat = req.body.gantiStat;
+    let results = await getTopik(conn)
+    const getNoTopik = results.idTopik;
+    var sql = `UPDATE topik SET statusSkripsi = '${ubahStat}' WHERE idTopik ='${results[0].idTopik}'`
+    conn.query(sql, [ubahStat], ()=>{
+        res.redirect('/daftarTopik')
+    })
+    
+    console.log(results.length)
+});
+
 route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
     const getName = req.query.filter;
     const conn = await dbConnect();
@@ -196,7 +209,6 @@ route.post('/',express.urlencoded(), async(req,res) => {
             else if(results[0].roles == "Dosen"){
                 res.redirect('/home')
             }
-            console.log(req.session)
         }
         else{
             req.flash('message', 'Username atau Password anda salah!');

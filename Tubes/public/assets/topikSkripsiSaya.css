@@ -157,8 +157,7 @@ fieldset{
     left: 93.7%;
     width: 5%;
     transform: translateX(-50%);
-    opacity: 0;
-    display: none;
+    
     transition: 0.2s;
     z-index: 1;
 }

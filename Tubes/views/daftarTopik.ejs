@@ -32,27 +32,31 @@
         <div class="skripsiSayaMain">
             <div class="innerMain">
                 <% for(const row of results) { %> 
-                <a href="" class="wrapper">
+                <a class="wrapper">
                     <div class="innerMain1">
                         <div class="icon">
                             <img src="assets/images/bookIcon.jpg" class="bookIcon" alt="">
                         </div>
                         <div class="textContent">
                             <h3><%= row.judulTopik %></h3>
-                            <p><%= row.idTopik %></p>
+                            <p name="noTopik"><%= row.idTopik %></p>
                             <p>DATA SCIENCE</p>
-                            <p><%= row.peminatan %></p>
+                            <p><%= row.idTopik %></p>
                             <p><%= row.peminatan %></p>
                         </div>
                         <div class="editButton">
-                            <div class="select">
-                                <span class="selected">NULL</span>
-                                <div class="caret"></div>
+                            <div>
+                                <h3><%= row.statusSkripsi %> </h3>
+                                <form action="/daftarTopik" method="post">
+                                    <select name="gantiStat">
+                                        <option selected="selected"><%= row.statusSkripsi %></option>
+                                        <option value="OK" name="OK">OK</option>
+                                        <option value="NULL" name="NULL">NULL</option>
+                                    </select>
+                                    <input type="submit" onclick="redirect" value="Ganti Status">
+                                </form>
+                                
                             </div>
-                            <ul class="menu">
-                                <li class="active">NULL</li>
-                                <li>OPEN</li>
-                            </ul>
                         </div>
                     </div>
                 </a>
