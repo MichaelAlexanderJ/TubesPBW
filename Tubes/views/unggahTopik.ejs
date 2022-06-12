@@ -25,34 +25,53 @@
 
         <br>
         <div class="unggahMain">
+            
             <div class="formUnggah">
-                <form action="">
+                <div class="alert">
+                    <%=   %> 
+                </div>
+                <form method = POST action="/unggahTopik" id = "tambahTopik">
                     <fieldset>
-                        <label for="nomor">Nomor</label>
-                        <input type="text" class="nomor">
-                        <label for="Judul" class="judul">Judul</label>
-                        <input type="text">
+                        <label for="Judul" class="judul" >Judul</label>
+                        <input type="text" name = "judulT" id ="judulT">
                         <label for="bidangPeminatan">Bidang Peminatan</label>
                         <select name="peminatan" id="">
-                            <option value="dataScience">Data Science</option>
-                            <option value="computingScience">Computing Science</option>
+                            <option value="Data Science">Data Science</option>
+                            <option value="Computing Science">Computing Science</option>
                         </select>
                         <label for="tipe">Tipe Skripsi</label>
                         <select name="tipeSkripsi" id="">
-                            <option value="bintang">*</option>
-                            <option value="reguler">Reguler</option>
+                            <option value="Bintang">*</option>
+                            <option value="Reguler">Reguler</option>
+                        </select>
+                        <label for="periodeT">Tahun Ajaran</label>
+                        <select name="periode" id="">
+                            <option value="2020/2021">2020/2021</option>
+                            <option value="2021/2022">2021/2022</option>
                         </select>
                         <label for="UploadFile">Upload File</label>
                         <input type="file" id="fileSkripsi">
                         <br>
-                        <input type="submit" class="submitSkripsi">
+                        <input type="submit" class="submitSkripsi" onclick="cekInputJudul()">
                     </fieldset>
                 </form>
             </div>
         </div>
 
     </div>
-
+    <script lang="javascript">
+        function cekInputJudul() {
+            var cekJudul = document.getElementById("judulT").value;
+            }
+            if (cekJudul != ""){
+                alert("Berhasil Mengunggah Topik!");
+        }
+        else{
+            alert("Input tidak boleh kosong!")
+        }
+    
+        
+    </script>
     <footer>
         <%- include('./layout/footer.ejs') %>
     </footer>

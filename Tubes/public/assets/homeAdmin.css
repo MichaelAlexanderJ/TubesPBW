@@ -9,6 +9,10 @@ body{
     align-items: center;
     text-align: center;
 }
+.submit{
+    border-radius: 15%;
+    background-color: darkblue ;
+}
 /* CSS Content Main */
 .innerContent{
     padding: 1rem;
