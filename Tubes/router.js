@@ -57,9 +57,9 @@ const getMax = conn => {
     });
 };
 
-const tambahTopik = (conn,idx, judul, bidang, tipeS, noID) => {
+const tambahTopik = (conn,idx, judul, bidang, tipeS, noID, periode) => {
     return new Promise((resolve,reject) => {
-        conn.query(`INSERT INTO topik (idTopik, judulTopik, peminatan, tipe, noDosen, statusSkripsi) VALUES (${idx},'${judul}', '${bidang}','${tipeS}', '${noID}', "NULL") `,(err,result) => {
+        conn.query(`INSERT INTO topik (idTopik, judulTopik, peminatan, tipe, noDosen, tahunAjaran, statusSkripsi) VALUES (${idx},'${judul}', '${bidang}','${tipeS}', '${noID}', '${periode}', "NULL") `,(err,result) => {
             if(err){
                 reject(err);
             }
@@ -168,20 +168,21 @@ route.post('/unggahTopik',express.urlencoded(), async(req,res) => {
     const judul = req.body.judulT;
     const bidang = req.body.peminatan;
     const tipeT = req.body.tipeSkripsi;
+    const periode = req.body.periode;
     const conn = await dbConnect();
     var maxID = await getMax(conn); //Buat dapetin IdTopik terbesar di DB
     var idx = maxID[0].max+1;
     if(req.session.loggedin){
         res.render('unggahTopik', {
-            noID, idx, judul, bidang, tipeT
+            noID, idx, judul, bidang, tipeT,periode
         });
     }
     else{
         req.flash('message', 'Anda harus login terlebih dahulu');
         res.redirect('/')
     }
-    if(judul.length > 0 && bidang.length > 0 && tipeT.length > 0){
-        await tambahTopik(conn,idx, judul, bidang, tipeT, noID);
+    if(judul.length > 0 && bidang.length > 0 && tipeT.length > 0 && periode.length>0 ){
+        await tambahTopik(conn,idx, judul, bidang, tipeT, noID,periode);
     }
     conn.release();
 });
@@ -192,7 +193,7 @@ route.get('/skripsiSaya', async(req,res) => {
     let results = await topikDosen(conn, noID);
     conn.release();
     if(req.session.loggedin){
-        res.render('skripsiSaya', {
+        res.render('topikSkripsiSaya', {
             results
         });
     }else{
