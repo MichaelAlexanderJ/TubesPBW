@@ -21,7 +21,8 @@
         <br>
         <div class="skripsiSayaMain">
                 <div class="innerMain">
-                    <a class="wrapper" href="">
+                    <% for(const row of results) { %> 
+                    <a class="wrapper">
                         <div class="innerMain1">
                             <div class="icon">
                                 <img src="assets/images/bookIcon.jpg" class="bookIcon" alt="">
@@ -32,17 +33,24 @@
                                 <p>DATA SCIENCE</p>
                             </div>
                             <div class="editButton">
-                                <div class="select">
-                                    <span class="selected">NULL</span>
-                                    <div class="caret"></div>
+                                <div>
+                                    <p>Status: <b><%= row.statusSkripsi %></b> </p>
+                                        <select name="gantiStat">
+                                            <option selected value="<%= row.statusSkripsi %>"> </option>
+                                            <option value="OK" name="OK">OK</option>
+                                            <option value="NO" name="NO">NO</option>
+                                            <option value="INQ" name="INQ">INQ</option>
+                                        </select>
+                                        <br>
+                                        <input type="hidden" name ="noTopik" value="<%= row.idTopik %>">
+                                        <input type="submit" name="updateStat" onclick="redirect" value="Ganti Status">
+                                    </form>
+                                    
                                 </div>
-                                <ul class="menu">
-                                    <li class="active">NULL</li>
-                                    <li>OPEN</li>
-                                </ul>
                             </div>
                         </div>
                     </a>
+                    <% } %> 
                 </div>
         </div>
     

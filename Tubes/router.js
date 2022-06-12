@@ -256,6 +256,18 @@ route.get('/skripsiSaya', async(req,res) => {
     });
 });
 
+route.post('/topikSkripsiSaya',express.urlencoded(), async(req,res) => {
+    const conn = await dbConnect();
+    const ubahStat = req.body.gantiStat;
+    const idTopik = req.body.noTopik
+    var sql = `UPDATE topik SET statusSkripsi = '${ubahStat}' WHERE idTopik ='${idTopik}'`
+    conn.query(sql, [ubahStat,idTopik], ()=>{
+        res.redirect('/topikSkripsiSaya')
+        res.end();
+    })
+    conn.release();
+});
+
 route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     let results = await getTopik(conn)
