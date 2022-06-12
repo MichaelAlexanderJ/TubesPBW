@@ -41,22 +41,28 @@
                             <div id="comments">
                                 <div class="innerComments">
                                     <div class="isiKomentar">
+                                        <input type="hidden" name ="kTopik" value="<%= row.idTopik %>">
+                                        <% for(const row of namaKomen) { %> 
                                         <div class="name">
                                             <!-- Nama si Penkomen -->
                                             <fieldset>
-                                                <h1>Sayang</h1> 
+                                                <h1><%= row.namaD %></h1>
                                             </fieldset>
                                         </div>
                                         <!-- isi komentarnya -->
                                         <fieldset>
-                                            <h1>isiKomentar</h1>
+                                            <h1><%= row.komentar %></h1>
                                         </fieldset>
+                                        <% } %> 
                                     </div>
 
                                     <div class="inputKomentar">
                                         <h3>Post A Comment</h3>
-                                        <form action="" method="post">
-                                            <textarea name="" id="" cols="30" rows="10">Insert Comment Here</textarea>
+                                        <form action="/daftarTopik2" method="post">
+                                            <textarea name="komentar" id="" cols="30" rows="10" placeholder="Masukkan comment.."></textarea>
+                                            <br>
+                                            <input type="hidden" name ="kTopik" value="<%= row.idTopik %>">
+                                            <input type="submit" name="" onclick="redirect" value="Comment">
                                         </form>
                                     </div>
 

@@ -21,9 +21,9 @@ const getTopik = conn => {
     });
 };
 
-const getStatus = conn => {
+const getKomen = (conn, idTopik) => {
     return new Promise((resolve, reject) => {
-        conn.query('SELECT * FROM statuss', (err, result)=> {
+        conn.query(`SELECT dosen.namaD AS namadosen, review.komentar AS komendosen, review.idTopik FROM review JOIN topik ON review.idTopik = topik.idTopik JOIN dosen ON topik.noDosen = dosen.noDosen WHERE review.idTopik ='%${idTopik}%'`, (err, result)=> {
             if(err){
                 reject(err);
             }else{
@@ -33,9 +33,9 @@ const getStatus = conn => {
     });
 }
 
-const getRoles = (conn, username) => {
+const getNamaD = (conn, idTopik) => {
     return new Promise((resolve,reject) => {
-        conn.query(`SELECT roles FROM dosen WHERE username LIKE '%${username}%' `, (err,result) => {
+        conn.query(`SELECT dosen.namaD, review.komentar, review.idTopik FROM dosen JOIN review ON dosen.noDosen = review.noDosen`, (err,result) => {
             if(err){
                 reject(err);
             }else{
@@ -175,6 +175,17 @@ const getUsersPage2 = (conn,startLimit,resultsPage) => {
 const getMax = conn => {
     return new Promise((resolve, rejects) =>{
         conn.query('SELECT MAX(idTopik) as max FROM topik',(err, result) =>{
+            if(err){
+                rejects(err);
+            }else{
+                resolve(result);
+            }
+        });
+    });
+};
+const getMaxRev = conn => {
+    return new Promise((resolve, rejects) =>{
+        conn.query('SELECT MAX(reviewID) as max FROM review',(err, result) =>{
             if(err){
                 rejects(err);
             }else{
@@ -357,30 +368,69 @@ route.post('/skripsiSaya',express.urlencoded(), async(req,res) => {
 
 route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
-    let results = await getTopik(conn)
+    let results = await getTopik(conn);
+    let comments = await getKomen(conn);
+    let namaKomen = await getNamaD(conn)
+    const nama = req.session.name;
+    const idTopik = req.body.kTopik
     if(req.session.loggedin){
         res.render('daftarTopik',{
-            results
+            results, comments, nama, idTopik, namaKomen
         });
     }else{
         req.flash('message', 'Anda harus login terlebih dahulu');
         res.redirect('/')
     }
-    
+    console.log(namaKomen)
+    conn.release();
+});
+route.get('/daftarTopik2',express.urlencoded(), async(req,res) => {
+    const conn = await dbConnect();
+    let results = await getTopik(conn);
+    let comments = await getKomen(conn);
+    let namaKomen = await getNamaD(conn)
+    const nama = req.session.name;
+    const idTopik = req.body.kTopik
+    if(req.session.loggedin){
+        res.render('daftarTopik',{
+            results, comments, nama, idTopik, namaKomen
+        });
+    }else{
+        req.flash('message', 'Anda harus login terlebih dahulu');
+        res.redirect('/')
+    }
     conn.release();
 });
 
 route.post('/daftarTopik',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     const ubahStat = req.body.gantiStat;
-    const idTopik = req.body.noTopik
+    const komen = req.body.komentar;
+    const idTopik = req.body.noTopik;
+    const nama = req.session.name;
     var sql = `UPDATE topik SET statusSkripsi = '${ubahStat}' WHERE idTopik ='${idTopik}'`
     conn.query(sql, [ubahStat,idTopik], ()=>{
         res.redirect('/daftarTopik')
         res.end();
     })
+});
+
+route.post('/daftarTopik2',express.urlencoded(), async(req,res) => {
+    const conn = await dbConnect();
+    const komen = req.body.komentar;
+    const idTopik = req.body.kTopik;
+    const noID = req.session.noID;
+    var maxID = await getMaxRev(conn); //Buat dapetin IdTopik terbesar di DB
+    var idx = maxID[0].max+1;
+    var sql = `INSERT INTO review (reviewID, noDosen, idTopik, komentar) VALUES ('${idx}','${noID}','${idTopik}','${komen}') `    
+    conn.query(sql, [idx, idTopik, komen], (err)=>{
+        if(err) throw err;
+        res.redirect('/daftarTopik')
+        res.end();
+    })
     conn.release();
 });
+
 
 route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
     const getName = req.query.filter;
