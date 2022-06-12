@@ -18,15 +18,10 @@
             <a href="http://localhost:8080/homeAdmin">
                 <img src="assets/images/leftArrow.png" alt="">
             </a>
-            <h3>Kelola Akun</h3>
-
-            <div class="searchAkun">
-                <form method="GET" action="/kelolaAkun">
-                    <fieldset>
-                        <legend>Search by Name</legend>
-                        <input type="text" name="filter" value="<%= %>">
-                        <input type="submit" class="submitAkun" value="SEARCH">
-                    </fieldset>
+            <h3 class="judulKelola">Kelola Akun</h3>
+            <div class="containerButton">
+                <form action="/kelolaAkun" class="submitEdit" method="post">
+                    <input type="submit" id="buttonEdit" value="Edit">
                 </form>
             </div>
         </div>
@@ -39,12 +34,20 @@
                     <a class="wrapper" href="">
                         <div class="innerMain1">
                             <img src="assets/images/adminIcon.jpg" class="adminIcon" alt="">
-                            <h3 name="namaDosen" ><%= entry.namaD %></h3>
-                            <div class="containerButton">
-                                <form action="/kelolaAkun" class="submitEdit" method="post">
-                                    <input type="submit" id="buttonEdit" value="Edit">
-                                </form>
+
+                            <div class="containerNama">
+                                <h3 name="namaDosen" class="namaDosen" ><%= entry.namaD %></h3>
                             </div>
+
+                            <div class="infoAkun">
+                                <div class="container1">
+                                    <h5>Username : <%= entry.username %></h5>
+                                    <h5>Password : <%= entry.pwd %></h5>
+                                    <h5>No Dosen : <%= entry.noDosen %></h5>
+                                    <h5>Role : <%= entry.roles %></h5>
+                                </div>
+                            </div>
+
                         </div>
                     </a>
                     <% }) %>

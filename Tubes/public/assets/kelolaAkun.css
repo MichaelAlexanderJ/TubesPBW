@@ -89,6 +89,8 @@ fieldset{
     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: row;
+    justify-content: flex-start;
+    justify-content: space-between;
 }
 
 .innerMain1:hover{
@@ -104,18 +106,16 @@ fieldset{
 
 .innerMain1 h3{
     padding: 1rem;
+    text-align: start;
+    justify-content: start;
 }
 
 .containerButton{
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-    width: 100%;
-    height: 100%;
-    margin: 0rem 5rem 0rem 0rem;
+    height: 50%;
+    margin-right: 10%;
 }
 #buttonEdit{
-    margin-left: 30%;
+    display: flex;
     border-radius: 0.5rem;
     padding: 2%;
     height: 5rem;
@@ -128,5 +128,30 @@ fieldset{
 
 fieldset{
     margin: 1rem;
+}
+
+/* CSS Container Info Akun */
+
+.infoAkun{
+    display: flex;
+    flex-direction: column;
+}
+.container1{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    text-align: center;
+    justify-content: center;
+    padding: 0%;
+}
+
+.container1 h5{
+    margin: none;
+}
+
+.judulKelola{
+    margin-left: 50%;
+    align-items: center;
+    text-align: center;
 }
 
