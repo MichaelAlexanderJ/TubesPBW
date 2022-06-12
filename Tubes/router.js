@@ -3,6 +3,7 @@ import path, { resolve } from 'path';
 import mysql from 'mysql';
 import { flash } from 'express-flash-message';
 import { get } from 'http';
+import alert from 'alert';
 
 var route = express.Router();
 
@@ -47,6 +48,18 @@ const getRoles = (conn, username) => {
 const getUsers = conn => {
     return new Promise((resolve,reject) => {
         conn.query('SELECT * FROM dosen', (err,result) => {
+            if(err){
+                reject(err);
+            }else{
+                resolve(result);
+            }
+        });
+    });
+};
+
+const checkLogin = (conn, username, password) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`SELECT username, pwd FROM dosen WHERE username LIKE '%${username}%' AND pwd LIKE '%${password}%'`, (err,result) => {
             if(err){
                 reject(err);
             }else{
@@ -156,11 +169,48 @@ const getUsersPage2 = (conn,startLimit,resultsPage) => {
             }else{
                 resolve(result);
             }
+        });
+    });
+};
+  
+const getMax = conn => {
+    return new Promise((resolve, rejects) =>{
+        conn.query('SELECT MAX(idTopik) as max FROM topik',(err, result) =>{
+            if(err){
+                rejects(err);
+            }else{
+                resolve(result);
+            }
+        });
+    });
+};
+
+const tambahTopik = (conn,idx, judul, bidang, tipeS, noID, periode) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`INSERT INTO topik (idTopik, judulTopik, peminatan, tipe, noDosen, tahunAjaran, statusSkripsi) VALUES (${idx},'${judul}', '${bidang}','${tipeS}', '${noID}', '${periode}', "NULL") `,(err,result) => {
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
         })
     })
 }
 
 
+const topikDosen = (conn,noID) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`SELECT idTopik, judulTopik, peminatan, tipe, statusSkripsi FROM topik WHERE noDosen LIKE '%${noID}%' `,(err,result) => {
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
 
 // Connect Database
 
@@ -237,17 +287,48 @@ route.get('/', async(req,res) => {
     conn.release();
     res.render('login', { message})
     });
+    
 
-
-route.get('/unggahTopik', async(req,res) => {
+route.get('/unggahTopik',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
+    const message = req.flash('message')
     conn.release();
-    res.render('unggahTopik',{
+    if(req.session.loggedin){
+        res.render('unggahTopik', { message
+        });
+    }
+     else {
+        res.redirect('/')
+    }
+});
 
-    });
+route.post('/unggahTopik',express.urlencoded(), async(req,res) => {
+    
+    const noID = req.session.noID; //Buat dapetin noDosen
+    const judul = req.body.judulT;
+    const bidang = req.body.peminatan;
+    const tipeT = req.body.tipeSkripsi;
+    const periode = req.body.periode;
+    const conn = await dbConnect();
+    var maxID = await getMax(conn); //Buat dapetin IdTopik terbesar di DB
+    var idx = maxID[0].max+1;
+    if(req.session.loggedin){
+        res.render('unggahTopik', {
+            noID, idx, judul, bidang, tipeT,periode
+        });
+    }
+    else{
+        req.flash('message', 'Anda harus login terlebih dahulu');
+        res.redirect('/')
+    }
+    if(judul.length > 0 && bidang.length > 0 && tipeT.length > 0 && periode.length>0 ){
+        await tambahTopik(conn,idx, judul, bidang, tipeT, noID,periode);
+    }
+    conn.release();
 });
 
 route.get('/skripsiSaya', async(req,res) => {
+    const noID = req.session.noID;
     const conn = await dbConnect();
     let results = await getStatus(conn)
     conn.release();
@@ -257,6 +338,32 @@ route.get('/skripsiSaya', async(req,res) => {
 });
 
 route.post('/topikSkripsiSaya',express.urlencoded(), async(req,res) => {
+    let results = await topikDosen(conn, noID);
+    conn.release();
+    if(req.session.loggedin){
+        res.render('topikSkripsiSaya', {
+            results
+        });
+    }else{
+        req.flash('message', 'Anda harus login terlebih dahulu');
+        res.redirect('/')
+    }
+});
+
+route.post('/skripsiSaya',express.urlencoded(), async(req,res) => {
+    const conn = await dbConnect();
+    const ubahStat = req.body.gantiStat;
+    const idTopik = req.body.noTopik
+    var sql = `UPDATE topik SET statusSkripsi = '${ubahStat}' WHERE idTopik ='${idTopik}'`
+    conn.query(sql, [ubahStat,idTopik], ()=>{
+        res.redirect('/skripsiSaya')
+        res.end();
+    })
+    conn.release();
+});
+
+
+route.get('/daftarTopik', async(req,res) => {
     const conn = await dbConnect();
     const ubahStat = req.body.gantiStat;
     const idTopik = req.body.noTopik
@@ -398,10 +505,10 @@ route.post('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
 
 route.post('/',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
+    const cekUser = checkLogin(conn,username,password)
     var username = req.body.user;
     var password = req.body.pass;
-    var roleDosen = getRoles(conn,username);
-    var sql = 'SELECT * FROM dosen WHERE username =? AND pwd =?';
+    var sql = `SELECT * FROM dosen WHERE username ='${username}' AND pwd ='${password}'`;
     conn.query(sql, [username,password], (err, results)=>{
         if(err) throw err;
         if(results.length > 0){
@@ -417,12 +524,17 @@ route.post('/',express.urlencoded(), async(req,res) => {
                 res.redirect('/home')
             }
         }
+        else if(username = "" || password == ""){
+            req.flash('message', 'Username atau Password Tidak Boleh Kosong!');
+            res.redirect('/')
+        }
         else{
-            req.flash('message', 'Username atau Password anda salah!');
+            req.flash('message', 'Username atau Password Anda salah!');
             res.redirect('/')
         }
         res.end();
     })
+    
 })
 
 export {route};
