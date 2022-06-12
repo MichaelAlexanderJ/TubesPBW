@@ -69,6 +69,97 @@ const getNameF = (conn,getName) => {
     })
 }
 
+//query kelola akun
+
+const getUsername = (conn,akunDiganti) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`SELECT * FROM dosen WHERE username LIKE '%${akunDiganti}%' `,(err,result) => {
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
+const updateNama = (conn,namaDiganti,results) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`UPDATE Dosen SET namaD = '${namaDiganti}' WHERE namaD LIKE '%${results[0].namaD}%'`,(err,result) =>{
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
+const updatePassword = (conn,passwordDiganti,results) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`UPDATE Dosen SET pwd = '${passwordDiganti}' WHERE pwd = '${results[0].pwd}'`,(err,result) =>{
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
+const updateNoDosen = (conn,noDosenDiganti,results) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`UPDATE Dosen SET noDosen = '${noDosenDiganti}' WHERE noDosen = '${results[0].noDosen}'`,(err,result) =>{
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
+const updateUsername = (conn,usernameDiganti,results) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`UPDATE Dosen SET username = '%${usernameDiganti}%' WHERE username = '%${results[0].username}%'`,(err,result) =>{
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
+const getUsersPage = conn => {
+    return new Promise((resolve,reject) =>{
+        conn.query('SELECT * FROM dosen',(err,result) => {
+            if(err){
+                reject(err);
+            }else{
+                resolve(result);
+            }
+        })
+    })
+}
+
+const getUsersPage2 = (conn,startLimit,resultsPage) => {
+    return new Promise((resolve,reject) =>{
+        conn.query(`SELECT * FROM dosen LIMIT ${startLimit},${resultsPage}`,(err,result) => {
+            if(err){
+                reject(err);
+            }else{
+                resolve(result);
+            }
+        })
+    })
+}
+
 // Connect Database
 
 const pool = mysql.createPool({
