@@ -238,9 +238,10 @@ route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
 
 route.post('/',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
+    const cekUser = checkLogin(conn,username,password)
     var username = req.body.user;
     var password = req.body.pass;
-    var sql = 'SELECT * FROM dosen WHERE username =? AND pwd =?';
+    var sql = `SELECT * FROM dosen WHERE username ='${username}' AND pwd ='${password}'`;
     conn.query(sql, [username,password], (err, results)=>{
         if(err) throw err;
         if(results.length > 0){
@@ -266,6 +267,7 @@ route.post('/',express.urlencoded(), async(req,res) => {
         }
         res.end();
     })
+    
 })
 
 export {route};
