@@ -168,11 +168,10 @@ const getUsersPage2 = (conn,startLimit,resultsPage) => {
                 reject(err);
             }else{
                 resolve(result);
-            }
+              }
         });
     });
-};
-  
+};  
 const getMax = conn => {
     return new Promise((resolve, rejects) =>{
         conn.query('SELECT MAX(idTopik) as max FROM topik',(err, result) =>{
@@ -197,7 +196,6 @@ const tambahTopik = (conn,idx, judul, bidang, tipeS, noID, periode) => {
         })
     })
 }
-
 
 const topikDosen = (conn,noID) => {
     return new Promise((resolve,reject) => {
@@ -330,14 +328,6 @@ route.post('/unggahTopik',express.urlencoded(), async(req,res) => {
 route.get('/skripsiSaya', async(req,res) => {
     const noID = req.session.noID;
     const conn = await dbConnect();
-    let results = await getStatus(conn)
-    conn.release();
-    res.render('topikSkripsiSaya',{
-        results
-    });
-});
-
-route.post('/topikSkripsiSaya',express.urlencoded(), async(req,res) => {
     let results = await topikDosen(conn, noID);
     conn.release();
     if(req.session.loggedin){
@@ -363,17 +353,7 @@ route.post('/skripsiSaya',express.urlencoded(), async(req,res) => {
 });
 
 
-route.get('/daftarTopik', async(req,res) => {
-    const conn = await dbConnect();
-    const ubahStat = req.body.gantiStat;
-    const idTopik = req.body.noTopik
-    var sql = `UPDATE topik SET statusSkripsi = '${ubahStat}' WHERE idTopik ='${idTopik}'`
-    conn.query(sql, [ubahStat,idTopik], ()=>{
-        res.redirect('/topikSkripsiSaya')
-        res.end();
-    })
-    conn.release();
-});
+
 
 route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
