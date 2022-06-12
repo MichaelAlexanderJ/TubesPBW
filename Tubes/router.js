@@ -179,19 +179,104 @@ route.post('/daftarTopik',express.urlencoded(), async(req,res) => {
     conn.release();
 });
 
-
 route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
     const getName = req.query.filter;
     const conn = await dbConnect();
-    let results = await getUsers(conn);
+    let results = await getUsersPage(conn);
+    const numResults = results.length;
+    let resultsPage = 3;
+    const numPages = Math.ceil(numResults/resultsPage);
+    let page = req.query.page ? Number(req.query.page) : 1;
+    if(page > numPages){
+        res.redirect('/kelolaAkun?page=' +encodeURIComponent(numPages));
+    } else if (page<1){
+        res.redirect('/kelolaAkun?page=' +encodeURIComponent('1'));
+    }
+    let startLimit = (page-1) * resultsPage;
+
+    results = await getUsersPage2(conn,startLimit,resultsPage);
+        let iteration = (page-3) < 1 ? 1 : page-3;
+        let ending = (iteration+7) <= numPages ? (iteration+7) : page + (numPages-page);
+        if(ending < (page+1)){
+            iteration -= (page+1) - numPages;
+        }
+        if(req.session.loggedin){
+            res.render('kelolaAkun',{
+                results : results,page,iteration,ending,numPages
+            })
+        }
+        else{
+            req.flash('message','anda harus login terlebih dahulu')
+            res.redirect('/');
+        }
+    //search filter
     if(getName != undefined && getName.length > 0){
         results = await getNameF(conn,getName);
+        console.log(results)
+        if(req.session.loggedin){
+            res.render('kelolaAkun',{
+                results : results,page,iteration,ending,numPages
+            })
+        }
+        else{
+            req.flash('message','anda harus login terlebih dahulu')
+            res.redirect('/');
+        }
+    }
+                conn.release();
+        });
+
+route.post('/kelolaAkun',express.urlencoded(),async(req,res)=>{
+    const conn = await dbConnect();
+    if(req.session.loggedin){
+        res.redirect('kelolaAkunLanjutan');
+    }
+    else{
+        req.flash('message','anda harus login terlebih dahulu')
+        res.redirect('/');
+    }
+
+});
+
+route.get('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
+    const conn = await dbConnect();
+    conn.release();
+    if(req.session.loggedin){
+        res.render('kelolaAkunLanjutan',{
+
+        })
+    }
+    else{
+        req.flash('message','anda harus login terlebih dahulu')
+        res.redirect('/');
+    }
+});
+
+route.post('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
+    const conn = await dbConnect();
+    let akunDiganti = req.body.akunGanti;
+    let results = await getUsername(conn,akunDiganti);
+    const namaDiganti = req.body.gantiNama
+    const usernameDiganti = req.body.gantiUsername;
+    const passwordDiganti = req.body.gantiPassword;
+    const noDosenDiganti = req.body.gantiNoDosen;
+    console.log(results[0].pwd);
+    console.log(namaDiganti);
+    if(namaDiganti.length > 0){
+        await updateNama(conn,namaDiganti,results);
+    }
+    if(passwordDiganti.length > 0){
+        await updatePassword(conn,passwordDiganti,results);
+    }
+    if(noDosenDiganti.length > 0){
+        await updateNoDosen(conn,noDosenDiganti,results);
+    }
+    if(usernameDiganti.length > 0){
+        await updateUsername(conn,usernameDiganti,results);
     }
     conn.release();
-    res.render('kelolaAkun',{
-        results
-    });
-});
+    res.redirect('kelolaAkun');
+})
 
 
 
