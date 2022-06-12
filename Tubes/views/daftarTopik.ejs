@@ -37,15 +37,31 @@
                             <p><%= row.idTopik %></p>
                             <p><%= row.peminatan %></p>
                             <button onclick="myFunction()">Show Comments</button>
+                            <br><br>
                             <div id="comments">
-                                    <div class="name">
-                                        <h1>Sayang</h1>
-                                    </div>
-
+                                <div class="innerComments">
                                     <div class="isiKomentar">
-
+                                        <div class="name">
+                                            <!-- Nama si Penkomen -->
+                                            <fieldset>
+                                                <h1>Sayang</h1> 
+                                            </fieldset>
+                                        </div>
+                                        <!-- isi komentarnya -->
+                                        <fieldset>
+                                            <h1>isiKomentar</h1>
+                                        </fieldset>
                                     </div>
+
+                                    <div class="inputKomentar">
+                                        <h3>Post A Comment</h3>
+                                        <form action="" method="post">
+                                            <textarea name="" id="" cols="30" rows="10">Insert Comment Here</textarea>
+                                        </form>
+                                    </div>
+
                                     <!-- Isi Comments -->
+                                </div>
                             </div>
                         </div>
 
