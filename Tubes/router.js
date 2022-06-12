@@ -125,7 +125,7 @@ const updateNoDosen = (conn,noDosenDiganti,results) => {
 
 const updateUsername = (conn,usernameDiganti,results) => {
     return new Promise((resolve,reject) => {
-        conn.query(`UPDATE Dosen SET username = '%${usernameDiganti}%' WHERE username = '%${results[0].username}%'`,(err,result) =>{
+        conn.query(`UPDATE Dosen SET username = '${usernameDiganti}' WHERE username LIKE '%${results[0].username}%'`,(err,result) =>{
             if(err){
                 reject(err);
             }
@@ -367,6 +367,7 @@ route.post('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
     if(usernameDiganti.length > 0){
         await updateUsername(conn,usernameDiganti,results);
     }
+    console.log(results[0].username);
     conn.release();
     res.redirect('kelolaAkun');
 })
