@@ -7,29 +7,20 @@
     <link rel="stylesheet" href="assets/daftarTopik.css">
     <title>Daftar Topik Skripsi</title>
 </head>
+
 <body>
     <header>
         <%- include('./layout/head.ejs') %>
     </header>
     <div class="skripsiSayaContainer">
         <div class="skripsiSayaTop">
-            
+
             <a href="http://localhost:8080/homeAdmin">
                 <img src="assets/images/leftArrow.png" alt="">
             </a>
 
             <h3>Daftar Topik Skripsi</h3>
             <p class="dueDateUnggah">Due/05/2022</p>
-
-            <div class="searchTopik">
-                <form method="GET" action="/daftarTopik">
-                    <fieldset>
-                        <legend>Search by Title</legend>
-                        <input type="text" name="filter" value="<%= %>">
-                        <input type="submit" class="submitAkun" value="SEARCH">
-                    </fieldset>
-                </form>
-            </div>
             
         </div>
         <br>
@@ -42,12 +33,26 @@
                             <img src="assets/images/bookIcon.jpg" class="bookIcon" alt="">
                         </div>
                         <div class="textContent">
-                            <form action="/daftarTopik" method="post">
                             <h3><%= row.judulTopik %></h3>
                             <p><%= row.idTopik %></p>
                             <p><%= row.peminatan %></p>
+                            <button onclick="myFunction()">Show Comments</button>
+                            <div id="comments">
+                                <div class="innerComments">
+                                    <div class="name">
+                                        <h1>Sayang</h1>
+                                    </div>
+
+                                    <div class="isiKomentar">
+
+                                    </div>
+                                    <!-- Isi Comments -->
+                                </div>
+                            </div>
                         </div>
+
                         <div class="editButton">
+                            <form action="/daftarTopik" method="post">
                             <div>
                                 <p>Status: <b><%= row.statusSkripsi %></b> </p>
                                     <select name="gantiStat">
@@ -72,6 +77,17 @@
     <footer>
         <%- include('./layout/footer.ejs') %>
     </footer>
-    
+
+
+<script>
+    function myFunction() {
+  var x = document.getElementById("comments");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+</script>
 </body>
 </html>
