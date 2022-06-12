@@ -186,7 +186,7 @@ const dbConnect = () => {
 }
 
 
-// ambil koneksi
+// ambil koneksi Dosen
 
 route.get('/home', async(req,res) => {
     const conn = await dbConnect();
@@ -203,6 +203,17 @@ route.get('/home', async(req,res) => {
         res.redirect('/')
     }
 });
+
+route.get('/daftarTopikDosen', async(req,res) => {
+    const conn = await dbConnect();
+    let results = await getTopik(conn)
+    conn.release();
+    res.render('daftarTopikDosen',{
+        results
+    });
+});
+
+// ambil koneksi Admin
 
 route.get('/homeAdmin', async(req,res) => {
     const conn = await dbConnect();
