@@ -177,10 +177,9 @@ route.post('/unggahTopik',express.urlencoded(), async(req,res) => {
         });
     }
     else{
-        // req.flash('message', 'Anda harus login terlebih dahulu');
-        // res.redirect('/')
+        req.flash('message', 'Anda harus login terlebih dahulu');
+        res.redirect('/')
     }
-      
     if(judul.length > 0 && bidang.length > 0 && tipeT.length > 0){
         await tambahTopik(conn,idx, judul, bidang, tipeT, noID);
     }
@@ -192,10 +191,28 @@ route.get('/skripsiSaya', async(req,res) => {
     const conn = await dbConnect();
     let results = await topikDosen(conn, noID);
     conn.release();
-    res.render('topikSkripsiSaya',{
-        results
-    });
+    if(req.session.loggedin){
+        res.render('skripsiSaya', {
+            results
+        });
+    }else{
+        req.flash('message', 'Anda harus login terlebih dahulu');
+        res.redirect('/')
+    }
 });
+
+route.post('/skripsiSaya',express.urlencoded(), async(req,res) => {
+    const conn = await dbConnect();
+    const ubahStat = req.body.gantiStat;
+    const idTopik = req.body.noTopik
+    var sql = `UPDATE topik SET statusSkripsi = '${ubahStat}' WHERE idTopik ='${idTopik}'`
+    conn.query(sql, [ubahStat,idTopik], ()=>{
+        res.redirect('/skripsiSaya')
+        res.end();
+    })
+    conn.release();
+});
+
 
 route.get('/daftarTopik', async(req,res) => {
     const conn = await dbConnect();
@@ -221,7 +238,6 @@ route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
 
 route.post('/',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
-    let cekLogin = await checkLogin(conn, username, password);
     var username = req.body.user;
     var password = req.body.pass;
     var sql = 'SELECT * FROM dosen WHERE username =? AND pwd =?';
