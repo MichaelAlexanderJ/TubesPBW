@@ -87,6 +87,7 @@
                                     <br>
                                 </form>
                                     <form action="/daftarTopik3" method="post">
+                                        <input type="hidden" name ="noTopik" value="<%= row.idTopik %>">
                                         <input type="submit" name="deleteTopik" onclick="redirect" value="DELETE">
                                     </form>
                                 

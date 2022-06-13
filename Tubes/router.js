@@ -441,10 +441,11 @@ route.post('/daftarTopik3',express.urlencoded(), async(req,res) => {
     const idTopik = req.body.noTopik;
     const nama = req.session.name;
     var sql = `DELETE FROM topik WHERE idTopik ='${idTopik}'`
-    conn.query(sql, [ubahStat,idTopik], ()=>{
+    conn.query(sql, [idTopik], ()=>{
         res.redirect('/daftarTopik')
         res.end();
     })
+    console.log(idTopik)
 });
 
 route.post('/daftarTopik2',express.urlencoded(), async(req,res) => {
