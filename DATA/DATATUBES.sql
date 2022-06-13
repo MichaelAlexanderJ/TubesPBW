@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 12, 2022 at 07:13 AM
+-- Generation Time: Jun 12, 2022 at 04:11 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -77,8 +77,8 @@ INSERT INTO `mahasiswa` (`namaM`, `NPM`) VALUES
 
 CREATE TABLE `review` (
   `reviewID` int(11) NOT NULL,
+  `noDosen` int(10) NOT NULL,
   `idTopik` int(11) NOT NULL,
-  `tanggal` date DEFAULT NULL,
   `komentar` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -86,8 +86,8 @@ CREATE TABLE `review` (
 -- Dumping data for table `review`
 --
 
-INSERT INTO `review` (`reviewID`, `idTopik`, `tanggal`, `komentar`) VALUES
-(1, 0, '2020-05-30', 'Topik-nya sudah bagus, wow keren');
+INSERT INTO `review` (`reviewID`, `noDosen`, `idTopik`, `komentar`) VALUES
+(1, 1181988005, 1, 'Topiknya sudah bagus');
 
 -- --------------------------------------------------------
 
@@ -96,17 +96,16 @@ INSERT INTO `review` (`reviewID`, `idTopik`, `tanggal`, `komentar`) VALUES
 --
 
 CREATE TABLE `semester` (
-  `tahunAjaran` varchar(9) DEFAULT NULL,
-  `ganjilGenap` varchar(10) DEFAULT NULL
+  `tahunAjaran` varchar(9) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `semester`
 --
 
-INSERT INTO `semester` (`tahunAjaran`, `ganjilGenap`) VALUES
-('2021/2022', 'Genap'),
-('2020/2021', 'Ganjil');
+INSERT INTO `semester` (`tahunAjaran`) VALUES
+('2020/2021'),
+('2021/2022');
 
 -- --------------------------------------------------------
 
@@ -142,6 +141,7 @@ CREATE TABLE `topik` (
   `peminatan` varchar(50) DEFAULT NULL,
   `tipe` varchar(20) NOT NULL,
   `noDosen` varchar(10) DEFAULT NULL,
+  `tahunAjaran` varchar(9) NOT NULL,
   `statusSkripsi` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -149,9 +149,9 @@ CREATE TABLE `topik` (
 -- Dumping data for table `topik`
 --
 
-INSERT INTO `topik` (`idTopik`, `judulTopik`, `peminatan`, `tipe`, `noDosen`, `statusSkripsi`) VALUES
-(2, 'Test Judul 1', 'Computing Science', 'Reguler', '1181988002', 'OK'),
-(4, 'Aplikasi Data Mining untuk Menampilkan Tingkat Kelulusan Mahasiswa', 'Data Science', 'Bintang', '1181988002', 'OK');
+INSERT INTO `topik` (`idTopik`, `judulTopik`, `peminatan`, `tipe`, `noDosen`, `tahunAjaran`, `statusSkripsi`) VALUES
+(1, 'Aplikasi Data Mining Untuk Menampilkan Informasi Tingkat Kelulusan Mahasiswa', 'Data Science', 'Reguler', '1181988002', '2020/2021', 'INQ'),
+(2, 'Test', 'Data Science', 'Bintang', '1181988001', '2021/2022', 'OK');
 
 -- --------------------------------------------------------
 
@@ -192,6 +192,12 @@ ALTER TABLE `review`
   ADD PRIMARY KEY (`reviewID`);
 
 --
+-- Indexes for table `semester`
+--
+ALTER TABLE `semester`
+  ADD PRIMARY KEY (`tahunAjaran`);
+
+--
 -- Indexes for table `topik`
 --
 ALTER TABLE `topik`
@@ -205,7 +211,7 @@ ALTER TABLE `topik`
 -- AUTO_INCREMENT for table `review`
 --
 ALTER TABLE `review`
-  MODIFY `reviewID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `reviewID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `topik`
