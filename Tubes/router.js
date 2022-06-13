@@ -401,6 +401,24 @@ route.get('/daftarTopik2',express.urlencoded(), async(req,res) => {
     }
     conn.release();
 });
+//get delete topik
+route.get('/daftarTopik3',express.urlencoded(), async(req,res) => {
+    const conn = await dbConnect();
+    let results = await getTopik(conn);
+    let comments = await getKomen(conn);
+    let namaKomen = await getNamaD(conn)
+    const nama = req.session.name;
+    const idTopik = req.body.kTopik
+    if(req.session.loggedin){
+        res.render('daftarTopik',{
+            results, comments, nama, idTopik, namaKomen
+        });
+    }else{
+        req.flash('message', 'Anda harus login terlebih dahulu');
+        res.redirect('/')
+    }
+    conn.release();
+});
 
 route.post('/daftarTopik',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
@@ -409,6 +427,20 @@ route.post('/daftarTopik',express.urlencoded(), async(req,res) => {
     const idTopik = req.body.noTopik;
     const nama = req.session.name;
     var sql = `UPDATE topik SET statusSkripsi = '${ubahStat}' WHERE idTopik ='${idTopik}'`
+    conn.query(sql, [ubahStat,idTopik], ()=>{
+        res.redirect('/daftarTopik')
+        res.end();
+    })
+});
+
+//delete topik
+route.post('/daftarTopik3',express.urlencoded(), async(req,res) => {
+    const conn = await dbConnect();
+    const ubahStat = req.body.gantiStat;
+    const komen = req.body.komentar;
+    const idTopik = req.body.noTopik;
+    const nama = req.session.name;
+    var sql = `DELETE FROM topik WHERE idTopik ='${idTopik}'`
     conn.query(sql, [ubahStat,idTopik], ()=>{
         res.redirect('/daftarTopik')
         res.end();
