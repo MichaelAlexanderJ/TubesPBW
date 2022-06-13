@@ -35,7 +35,7 @@ const getKomen = (conn, idTopik) => {
 
 const getNamaD = (conn, idTopik) => {
     return new Promise((resolve,reject) => {
-        conn.query(`SELECT dosen.namaD, review.komentar, review.idTopik FROM dosen JOIN review ON dosen.noDosen = review.noDosen`, (err,result) => {
+        conn.query(`SELECT dosen.namaD, review.komentar, review.idTopik FROM dosen JOIN review ON dosen.noDosen = review.noDosen WHERE review.idTopik `, (err,result) => {
             if(err){
                 reject(err);
             }else{
@@ -372,7 +372,7 @@ route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
     let comments = await getKomen(conn);
     let namaKomen = await getNamaD(conn)
     const nama = req.session.name;
-    const idTopik = req.body.kTopik
+    const idTopik = req.body.noTopik
     if(req.session.loggedin){
         res.render('daftarTopik',{
             results, comments, nama, idTopik, namaKomen
@@ -381,7 +381,7 @@ route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
         req.flash('message', 'Anda harus login terlebih dahulu');
         res.redirect('/')
     }
-    console.log(namaKomen)
+    console.log(idTopik)
     conn.release();
 });
 route.get('/daftarTopik2',express.urlencoded(), async(req,res) => {
@@ -390,7 +390,7 @@ route.get('/daftarTopik2',express.urlencoded(), async(req,res) => {
     let comments = await getKomen(conn);
     let namaKomen = await getNamaD(conn)
     const nama = req.session.name;
-    const idTopik = req.body.kTopik
+    const idTopik = req.body.plisTopik
     if(req.session.loggedin){
         res.render('daftarTopik',{
             results, comments, nama, idTopik, namaKomen
@@ -445,7 +445,6 @@ route.post('/daftarTopik3',express.urlencoded(), async(req,res) => {
         res.redirect('/daftarTopik')
         res.end();
     })
-    console.log(idTopik)
 });
 
 route.post('/daftarTopik2',express.urlencoded(), async(req,res) => {
@@ -498,7 +497,6 @@ route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
     //search filter
     if(getName != undefined && getName.length > 0){
         results = await getNameF(conn,getName);
-        console.log(results)
         if(req.session.loggedin){
             res.render('kelolaAkun',{
                 results : results,page,iteration,ending,numPages
@@ -546,8 +544,6 @@ route.post('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
     const usernameDiganti = req.body.gantiUsername;
     const passwordDiganti = req.body.gantiPassword;
     const noDosenDiganti = req.body.gantiNoDosen;
-    console.log(results[0].pwd);
-    console.log(namaDiganti);
     if(namaDiganti.length > 0){
         await updateNama(conn,namaDiganti,results);
     }
@@ -560,7 +556,6 @@ route.post('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
     if(usernameDiganti.length > 0){
         await updateUsername(conn,usernameDiganti,results);
     }
-    console.log(results[0].username);
     conn.release();
     res.redirect('kelolaAkun');
 })

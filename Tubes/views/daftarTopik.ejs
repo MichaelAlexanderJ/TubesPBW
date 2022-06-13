@@ -41,8 +41,8 @@
                             <div id="comments">
                                 <div class="innerComments">
                                     <div class="isiKomentar">
-                                        <input type="hidden" name ="kTopik" value="<%= row.idTopik %>">
                                         <% for(const row of namaKomen) { %> 
+                                            <input type="hidden" name ="plisTopik" value="<%= row.idTopik %>">
                                         <div class="name">
                                             <!-- Nama si Penkomen -->
                                             <fieldset>
@@ -62,7 +62,7 @@
                                             <textarea name="komentar" id="" cols="30" rows="10" placeholder="Masukkan comment.."></textarea>
                                             <br>
                                             <input type="hidden" name ="kTopik" value="<%= row.idTopik %>">
-                                            <input type="submit" name="" onclick="redirect" value="Comment">
+                                            <input type="submit" name="" onclick="redirect" value="<%= row.idTopik %>">
                                         </form>
                                     </div>
 
