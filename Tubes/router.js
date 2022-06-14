@@ -221,6 +221,20 @@ const topikDosen = (conn,noID) => {
     })
 }
 
+const getPeriode = (conn) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`SELECT * FROM semester`,(err,result) => {
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
+
 // Connect Database
 
 const pool = mysql.createPool({
@@ -280,7 +294,9 @@ route.get('/homeAdmin',express.urlencoded(), async(req,res) => {
     var nama = req.session.name;
     var noID = req.session.noID;
     var roleD = req.session.role;
-    const periode = req.body.setPeriode;
+    const periode = await getPeriode(conn);
+    const displayPeriode = JSON.stringify(periode)
+    console.log(periode)
     if(req.session.loggedin){
         res.render('homeAdmin', {
             nama, noID, roleD, periode
