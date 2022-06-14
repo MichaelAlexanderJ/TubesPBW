@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 12, 2022 at 04:11 PM
+-- Generation Time: Jun 14, 2022 at 10:58 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -55,7 +55,7 @@ INSERT INTO `dosen` (`namaD`, `noDosen`, `username`, `pwd`, `roles`, `statusSkri
 
 CREATE TABLE `mahasiswa` (
   `namaM` varchar(100) DEFAULT NULL,
-  `NPM` char(10) DEFAULT NULL
+  `NPM` char(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -63,10 +63,10 @@ CREATE TABLE `mahasiswa` (
 --
 
 INSERT INTO `mahasiswa` (`namaM`, `NPM`) VALUES
-('Jose Feliksilda', '6181901051'),
 ('Michael Alexander', '6181901014'),
 ('Daffa Irham Atharazka', '6181901021'),
 ('Vincentius Daryl Kurniawan', '6181901023'),
+('Jose Feliksilda', '6181901051'),
 ('Mohammad Dustin Trinanda Susilo', '6181901052');
 
 -- --------------------------------------------------------
@@ -82,13 +82,6 @@ CREATE TABLE `review` (
   `komentar` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `review`
---
-
-INSERT INTO `review` (`reviewID`, `noDosen`, `idTopik`, `komentar`) VALUES
-(1, 1181988005, 1, 'Topiknya sudah bagus');
-
 -- --------------------------------------------------------
 
 --
@@ -96,16 +89,15 @@ INSERT INTO `review` (`reviewID`, `noDosen`, `idTopik`, `komentar`) VALUES
 --
 
 CREATE TABLE `semester` (
-  `tahunAjaran` varchar(9) NOT NULL
+  `periode` int(9) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `semester`
 --
 
-INSERT INTO `semester` (`tahunAjaran`) VALUES
-('2020/2021'),
-('2021/2022');
+INSERT INTO `semester` (`periode`) VALUES
+(1);
 
 -- --------------------------------------------------------
 
@@ -150,8 +142,9 @@ CREATE TABLE `topik` (
 --
 
 INSERT INTO `topik` (`idTopik`, `judulTopik`, `peminatan`, `tipe`, `noDosen`, `tahunAjaran`, `statusSkripsi`) VALUES
-(1, 'Aplikasi Data Mining Untuk Menampilkan Informasi Tingkat Kelulusan Mahasiswa', 'Data Science', 'Reguler', '1181988002', '2020/2021', 'INQ'),
-(2, 'Test', 'Data Science', 'Bintang', '1181988001', '2021/2022', 'OK');
+(1, 'Topik 1', 'Computing Science', 'Reguler', '1181988001', '2021/2022', 'OK'),
+(2, 'Topik 2', 'Computing Science', 'Bintang', '1181988003', '2021/2022', 'NULL'),
+(3, 'Judul Skripsi 1', 'Computing Science', 'Reguler', '1181988002', '2020/2021', 'OPEN');
 
 -- --------------------------------------------------------
 
@@ -186,6 +179,12 @@ ALTER TABLE `dosen`
   ADD PRIMARY KEY (`noDosen`);
 
 --
+-- Indexes for table `mahasiswa`
+--
+ALTER TABLE `mahasiswa`
+  ADD PRIMARY KEY (`NPM`);
+
+--
 -- Indexes for table `review`
 --
 ALTER TABLE `review`
@@ -195,7 +194,7 @@ ALTER TABLE `review`
 -- Indexes for table `semester`
 --
 ALTER TABLE `semester`
-  ADD PRIMARY KEY (`tahunAjaran`);
+  ADD PRIMARY KEY (`periode`);
 
 --
 -- Indexes for table `topik`

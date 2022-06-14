@@ -274,20 +274,32 @@ route.get('/daftarTopikDosen', async(req,res) => {
 
 // ambil koneksi Admin
 
-route.get('/homeAdmin', async(req,res) => {
+route.get('/homeAdmin',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     conn.release();
     var nama = req.session.name;
     var noID = req.session.noID;
     var roleD = req.session.role;
+    const periode = req.body.setPeriode;
     if(req.session.loggedin){
         res.render('homeAdmin', {
-            nama, noID, roleD
+            nama, noID, roleD, periode
         });
     } else {
         req.flash('message', 'Anda harus login terlebih dahulu');
         res.redirect('/')
     }
+});
+
+route.post('/homeAdmin',express.urlencoded(), async(req,res) => {
+    const conn = await dbConnect();
+    const periode = req.body.setPeriode;
+    var sql = `UPDATE semester SET periode = '${periode}'`;
+    conn.query(sql, [periode], (err,result)=>{
+        if(err) throw err;
+        res.redirect('/homeAdmin')
+    })
+    
 });
 
 route.get('/', async(req,res) => {

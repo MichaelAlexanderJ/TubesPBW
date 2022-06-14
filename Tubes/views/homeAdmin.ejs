@@ -17,11 +17,14 @@
         <div class="topContent">
             <h2>Topik Skripsi</h2>
             <h3>Periode 2022/2023 (Genap)</h3>
-            <select name="" id="" >
-                <option selected value="Pengunggahan Topik Skripsi">Pengunggahan Topik Skripsi</option>
-                <option value="Pengambilan Topik Oleh Mahasiswa">Pengambilan Topik Oleh Mahasiswa</option>
-            </select>
-            <button class="submit">Submit</button>
+            <h3><%= periode %> </h3>
+            <form action="/homeAdmin" method="post">
+                <select name="setPeriode" id="" >
+                    <option value="1">Pengunggahan Topik Skripsi</option>
+                    <option value="2">Pengambilan Topik Oleh Mahasiswa</option>
+                </select>
+                <button class="submit">Submit</button>
+            </form>
         </div>
 
         <!-- Container content -->
