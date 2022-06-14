@@ -40,9 +40,9 @@
                                     <p>Status: <b><%= row.statusSkripsi %></b> </p>
                                         <select name="gantiStat">
                                             <option selected value="<%= row.statusSkripsi %>"> </option>
-                                            <option value="OK" name="OK">OK</option>
-                                            <option value="NO" name="NO">NO</option>
-                                            <option value="INQ" name="INQ">INQ</option>
+                                            <option value="OPEN" name="OK">OPEN</option>
+                                            <option value="CLOSE" name="NO">CLOSE</option>
+                                            <option value="TAKEN" name="INQ">TAKEN</option>
                                         </select>
                                         <br>
                                         <input type="hidden" name ="noTopik" value="<%= row.idTopik %>">
