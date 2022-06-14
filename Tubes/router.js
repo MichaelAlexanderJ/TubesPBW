@@ -296,7 +296,6 @@ route.get('/homeAdmin',express.urlencoded(), async(req,res) => {
     var roleD = req.session.role;
     const periode = await getPeriode(conn);
     const displayPeriode = JSON.stringify(periode)
-    console.log(periode)
     if(req.session.loggedin){
         res.render('homeAdmin', {
             nama, noID, roleD, periode
@@ -310,12 +309,12 @@ route.get('/homeAdmin',express.urlencoded(), async(req,res) => {
 route.post('/homeAdmin',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     const periode = req.body.setPeriode;
-    var sql = `UPDATE semester SET periode = '${periode}'`;
+    var sql = `SELECT namaPeriode FROM semester WHERE periode ='${periode}'`;
     conn.query(sql, [periode], (err,result)=>{
         if(err) throw err;
         res.redirect('/homeAdmin')
     })
-    
+    console.log(periode)
 });
 
 route.get('/', async(req,res) => {
