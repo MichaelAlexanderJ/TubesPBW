@@ -23,7 +23,29 @@ const getTopik = conn => {
 
 const getTopikbyNoDosen = (conn,noDosenData) => {
     return new Promise((resolve, reject) => {
-        conn.query(`SELECT * FROM topik WHERE noDosen = ${noDosenData} `    , (err, result)=> {
+        conn.query(`SELECT * FROM topik WHERE noDosen = ${noDosenData}` , (err, result)=> {
+            if(err){
+                reject(err);
+            }else{
+                resolve(result);
+            }
+        });
+    });
+};
+const getTopikbyStatus = (conn,inputStatus) => {
+    return new Promise((resolve, reject) => {
+        conn.query(`SELECT * FROM topik WHERE statusSkripsi = '${inputStatus}'` , (err, result)=> {
+            if(err){
+                reject(err);
+            }else{
+                resolve(result);
+            }
+        });
+    });
+};
+const getTopikbyTahun = (conn,inputTahun) => {
+    return new Promise((resolve, reject) => {
+        conn.query(`SELECT * FROM topik WHERE tahunAjaran = '${inputTahun}'` , (err, result)=> {
             if(err){
                 reject(err);
             }else{
@@ -106,6 +128,31 @@ const getNoDosen = (conn,getName) => {
         })
     })
 }
+const getStatuSS = (conn,getStatus) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`SELECT statusSkripsi FROM topik WHERE statusSkripsi LIKE '%${getStatus}%' `,(err,result) => {
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+const getThn = (conn,getTahun) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`SELECT tahunAjaran FROM topik WHERE tahunAjaran LIKE '%${getTahun}%' `,(err,result) => {
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
 
 //query kelola akun
 
@@ -310,15 +357,45 @@ route.get('/daftarTopikDosen',express.urlencoded(), async(req,res) => {
     let comments = await getKomen(conn);
     let namaKomen = await getNamaD(conn)
     const getName = req.query.filter;
+    const getStatus = req.query.filterStat;
+    const getTahun = req.query.filterTahun;
     const nama = req.session.name;
     const idTopik = req.body.kTopik
 
     if(getName != undefined && getName.length > 0){
         let noDosen = await getNoDosen(conn,getName);
         let noDosenData = noDosen[0].noDosen;
-        console.log(noDosenData);
         results = await getTopikbyNoDosen(conn,noDosenData);
-        console.log(results);
+        if(req.session.loggedin){
+            res.render('daftarTopikDosen',{
+                results,comments, nama, idTopik, namaKomen
+            })
+        }
+        else{
+            req.flash('message','anda harus login terlebih dahulu')
+            res.redirect('/');
+        }
+    }
+    else if(getStatus != undefined && getStatus.length > 0){
+        var stat = await getStatuSS(conn,getStatus);
+        var inputStatus = stat[0].statusSkripsi;
+        results = await getTopikbyStatus(conn,inputStatus);
+        console.log(inputStatus)
+        if(req.session.loggedin){
+            res.render('daftarTopikDosen',{
+                results,comments, nama, idTopik, namaKomen
+            })
+        }
+        else{
+            req.flash('message','anda harus login terlebih dahulu')
+            res.redirect('/');
+        }
+    }
+    else if(getTahun != undefined && getTahun.length > 0){
+        var thnAjaran = await getThn(conn,getTahun);
+        var inputTahun = thnAjaran[0].tahunAjaran;
+        console.log(inputTahun)
+        results = await getTopikbyTahun(conn,inputTahun);
         if(req.session.loggedin){
             res.render('daftarTopikDosen',{
                 results,comments, nama, idTopik, namaKomen
@@ -469,9 +546,55 @@ route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
     let results = await getTopik(conn);
     let comments = await getKomen(conn);
     let namaKomen = await getNamaD(conn)
+    const getName = req.query.filter;
     const nama = req.session.name;
-    const idTopik = req.body.noTopik
-    if(req.session.loggedin){
+    const idTopik = req.body.kTopik
+
+    if(getName != undefined && getName.length > 0){
+        let noDosen = await getNoDosen(conn,getName);
+        let noDosenData = noDosen[0].noDosen;
+        results = await getTopikbyNoDosen(conn,noDosenData);
+        if(req.session.loggedin){
+            res.render('daftarTopikDosen',{
+                results,comments, nama, idTopik, namaKomen
+            })
+        }
+        else{
+            req.flash('message','anda harus login terlebih dahulu')
+            res.redirect('/');
+        }
+    }
+    else if(getStatus != undefined && getStatus.length > 0){
+        var stat = await getStatuSS(conn,getStatus);
+        var inputStatus = stat[0].statusSkripsi;
+        results = await getTopikbyStatus(conn,inputStatus);
+        console.log(inputStatus)
+        if(req.session.loggedin){
+            res.render('daftarTopikDosen',{
+                results,comments, nama, idTopik, namaKomen
+            })
+        }
+        else{
+            req.flash('message','anda harus login terlebih dahulu')
+            res.redirect('/');
+        }
+    }
+    else if(getTahun != undefined && getTahun.length > 0){
+        var thnAjaran = await getThn(conn,getTahun);
+        var inputTahun = thnAjaran[0].tahunAjaran;
+        console.log(inputTahun)
+        results = await getTopikbyTahun(conn,inputTahun);
+        if(req.session.loggedin){
+            res.render('daftarTopikDosen',{
+                results,comments, nama, idTopik, namaKomen
+            })
+        }
+        else{
+            req.flash('message','anda harus login terlebih dahulu')
+            res.redirect('/');
+        }
+    }
+    else if(req.session.loggedin){
         res.render('daftarTopik',{
             results, comments, nama, idTopik, namaKomen
         });
@@ -479,9 +602,8 @@ route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
         req.flash('message', 'Anda harus login terlebih dahulu');
         res.redirect('/')
     }
-    console.log(idTopik)
     conn.release();
-});
+    });
 
 route.get('/daftarTopik2',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
