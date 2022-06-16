@@ -22,7 +22,7 @@
             <h3>Daftar Topik Skripsi</h3>
             <p class="dueDateUnggah">Due/05/2022</p>
             <div class="searchAkun">
-                <form method="GET" action="/daftarTopikDosen">
+                <form method="GET" action="/daftarTopik">
                     <fieldset>
                         <legend>Search by Name</legend>
                         <input type="text" name="filter" value="<%= %>">
@@ -31,14 +31,15 @@
                     
                     
                 </form>
-                <form method="GET" action="/daftarTopikDosen">
+                <form method="GET" action="/daftarTopik">
                     <select name="filterTahun">
                         <option selected value=" "> </option>
                         <option value="2020/2021">2020/2021</option>
-                            <option value="2021/2022">2021/2022</option>
+                        <option value="2021/2022">2021/2022</option>
                     </select>
+                    <input type="submit" class="submitAkun" value="SEARCH">
                 </form>
-                <form method="GET" action="/daftarTopikDosen">
+                <form method="GET" action="/daftarTopik">
                     <select name="filterStat">
                         <option selected value=" "> </option>
                         <option value="NULL" name="NULL">NULL</option>
@@ -49,6 +50,7 @@
                         <option value="CLOSE" name="NO">CLOSE</option>
                         <option value="TAKEN" name="INQ">TAKEN</option>
                     </select>
+                    <input type="submit" class="submitAkun" value="SEARCH">
                 </form>
                 
             </div>

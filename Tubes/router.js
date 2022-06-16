@@ -547,6 +547,8 @@ route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
     let comments = await getKomen(conn);
     let namaKomen = await getNamaD(conn)
     const getName = req.query.filter;
+    const getStatus = req.query.filterStat;
+    const getTahun = req.query.filterTahun;
     const nama = req.session.name;
     const idTopik = req.body.kTopik
 
