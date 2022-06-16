@@ -20,16 +20,6 @@
 
             <h3>Daftar Topik Skripsi</h3>
             <p class="dueDateUnggah">Due/05/2022</p>
-
-            <div class="searchTopik">
-                <form method="GET" action="/daftarTopik">
-                    <fieldset>
-                        <legend>Search by Title</legend>
-                        <input type="text" name="filter" value="<%= %>">
-                        <input type="submit" class="submitAkun" value="SEARCH">
-                    </fieldset>
-                </form>
-            </div>
             
         </div>
         <br>
@@ -42,10 +32,42 @@
                             <img src="assets/images/bookIcon.jpg" class="bookIcon" alt="">
                         </div>
                         <div class="textContent">
-                            <form action="/daftarTopik" method="post">
                             <h3><%= row.judulTopik %></h3>
                             <p><%= row.idTopik %></p>
                             <p><%= row.peminatan %></p>
+                            <button onclick="myFunction()">Show Comments</button>
+                            <br><br>
+                            <div id="comments">
+                                <div class="innerComments">
+                                    <div class="isiKomentar">
+                                        <% for(const row of namaKomen) { %> 
+                                            <input type="hidden" name ="plisTopik" value="<%= row.idTopik %>">
+                                        <div class="name">
+                                            <!-- Nama si Penkomen -->
+                                            <fieldset>
+                                                <h1><%= row.namaD %></h1>
+                                            </fieldset>
+                                        </div>
+                                        <!-- isi komentarnya -->
+                                        <fieldset>
+                                            <h1><%= row.komentar %></h1>
+                                        </fieldset>
+                                        <% } %> 
+                                    </div>
+
+                                    <div class="inputKomentar">
+                                        <h3>Post A Comment</h3>
+                                        <form action="/daftarTopik2" method="post">
+                                            <textarea name="komentar" id="" cols="30" rows="10" placeholder="Masukkan comment.."></textarea>
+                                            <br>
+                                            <input type="hidden" name ="kTopik" value="<%= row.idTopik %>">
+                                            <input type="submit" name="" onclick="redirect" value="Submit Comment">
+                                        </form>
+                                    </div>
+
+                                    <!-- Isi Comments -->
+                                </div>
+                            </div>
                         </div>
                         <div class="editButton">
                             <div>
