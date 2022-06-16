@@ -33,9 +33,9 @@ const getKomen = (conn, idTopik) => {
     });
 }
 
-const getNamaD = (conn, idTopik) => {
+const getNamaD = (conn) => {
     return new Promise((resolve,reject) => {
-        conn.query(`SELECT dosen.namaD, review.komentar, review.idTopik FROM dosen JOIN review ON dosen.noDosen = review.noDosen WHERE review.idTopik `, (err,result) => {
+        conn.query(`SELECT dosen.namaD, review.komentar, review.idTopik FROM dosen JOIN review ON dosen.noDosen = review.noDosen`, (err,result) => {
             if(err){
                 reject(err);
             }else{
@@ -277,14 +277,40 @@ route.get('/home', async(req,res) => {
     }
 });
 
-route.get('/daftarTopikDosen', async(req,res) => {
+route.get('/daftarTopikDosen',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
-    let results = await getTopik(conn)
+    let results = await getTopik(conn);
+    let comments = await getKomen(conn);
+    let namaKomen = await getNamaD(conn)
+    const nama = req.session.name;
+    const idTopik = req.body.kTopik
+    if(req.session.loggedin){
+        res.render('daftarTopikDosen',{
+            results, comments, nama, idTopik, namaKomen
+        });
+    }else{
+        req.flash('message', 'Anda harus login terlebih dahulu');
+        res.redirect('/')
+    }
     conn.release();
-    res.render('daftarTopikDosen',{
-        results
     });
-});
+
+    route.post('/daftarTopikDosen2',express.urlencoded(), async(req,res) => {
+        const conn = await dbConnect();
+        const komen = req.body.komentar;
+        const idTopik = req.body.kTopik;
+        const noID = req.session.noID;
+        var maxID = await getMaxRev(conn); //Buat dapetin IdTopik terbesar di DB
+        var idx = maxID[0].max+1;
+        var sql = `INSERT INTO review (reviewID, noDosen, idTopik, komentar) VALUES ('${idx}','${noID}','${idTopik}','${komen}') `    
+        conn.query(sql, [idx, idTopik, komen], (err)=>{
+            if(err) throw err;
+            res.redirect('/daftarTopikDosen')
+            res.end();
+        })
+        conn.release();
+    });
+    
 
 // ambil koneksi Admin
 
@@ -411,6 +437,7 @@ route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
     console.log(idTopik)
     conn.release();
 });
+
 route.get('/daftarTopik2',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     let results = await getTopik(conn);
