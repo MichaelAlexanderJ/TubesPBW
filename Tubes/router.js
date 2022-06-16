@@ -23,7 +23,7 @@ const getTopik = conn => {
 
 const getTopikbyNoDosen = (conn,noDosenData) => {
     return new Promise((resolve, reject) => {
-        conn.query(`SELECT * FROM topik WHERE ${noDosenData} `    , (err, result)=> {
+        conn.query(`SELECT * FROM topik WHERE noDosen = ${noDosenData} `    , (err, result)=> {
             if(err){
                 reject(err);
             }else{
