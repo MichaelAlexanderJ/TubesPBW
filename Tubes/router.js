@@ -21,6 +21,18 @@ const getTopik = conn => {
     });
 };
 
+const getTopikbyNoDosen = (conn,noDosenData) => {
+    return new Promise((resolve, reject) => {
+        conn.query(`SELECT * FROM topik WHERE ${noDosenData} `    , (err, result)=> {
+            if(err){
+                reject(err);
+            }else{
+                resolve(result);
+            }
+        });
+    });
+};
+
 const getKomen = (conn, idTopik) => {
     return new Promise((resolve, reject) => {
         conn.query(`SELECT dosen.namaD AS namadosen, review.komentar AS komendosen, review.idTopik FROM review JOIN topik ON review.idTopik = topik.idTopik JOIN dosen ON topik.noDosen = dosen.noDosen WHERE review.idTopik ='%${idTopik}%'`, (err, result)=> {
@@ -72,6 +84,19 @@ const checkLogin = (conn, username, password) => {
 const getNameF = (conn,getName) => {
     return new Promise((resolve,reject) => {
         conn.query(`SELECT * FROM dosen WHERE namad LIKE '%${getName}%' `,(err,result) => {
+            if(err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
+const getNoDosen = (conn,getName) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`SELECT noDosen FROM dosen WHERE namad LIKE '%${getName}%' `,(err,result) => {
             if(err){
                 reject(err);
             }
@@ -277,14 +302,34 @@ route.get('/home', async(req,res) => {
     }
 });
 
+
+// Get buat search filter DaftarTopikDosen
 route.get('/daftarTopikDosen',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     let results = await getTopik(conn);
     let comments = await getKomen(conn);
     let namaKomen = await getNamaD(conn)
+    const getName = req.query.filter;
     const nama = req.session.name;
     const idTopik = req.body.kTopik
-    if(req.session.loggedin){
+
+    if(getName != undefined && getName.length > 0){
+        let noDosen = await getNoDosen(conn,getName);
+        let noDosenData = noDosen[0].noDosen;
+        console.log(noDosenData);
+        results = await getTopikbyNoDosen(conn,noDosenData);
+        console.log(results);
+        if(req.session.loggedin){
+            res.render('daftarTopikDosen',{
+                results,comments, nama, idTopik, namaKomen
+            })
+        }
+        else{
+            req.flash('message','anda harus login terlebih dahulu')
+            res.redirect('/');
+        }
+    }
+    else if(req.session.loggedin){
         res.render('daftarTopikDosen',{
             results, comments, nama, idTopik, namaKomen
         });
