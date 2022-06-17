@@ -809,10 +809,6 @@ route.post('/',express.urlencoded(), async(req,res) => {
             req.flash('message', 'Username atau Password Tidak Boleh Kosong!');
             res.redirect('/')
         }
-        else if(username = 'false'|| password == false){
-            req.flash('message', 'Username atau Password Tidak Terdaftar!');
-            res.redirect('/')
-        }
         else{
             req.flash('message', 'Username atau Password Anda salah!');
             res.redirect('/')
