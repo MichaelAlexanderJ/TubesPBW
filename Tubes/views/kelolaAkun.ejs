@@ -41,10 +41,22 @@
 
                             <div class="infoAkun">
                                 <div class="container1">
-                                    <h5>Username : <%= entry.username %></h5>
-                                    <h5>Password : <%= entry.pwd %></h5>
-                                    <h5>No Dosen : <%= entry.noDosen %></h5>
-                                    <h5>Role : <%= entry.roles %></h5>
+
+                                    <table class="tableInfo">
+                                        <tr>
+                                            <th>Username : </th>
+                                            <td><%= entry.username %></td>
+                                        </tr>
+                                        <tr>
+                                            <th>No Dosen : </th>
+                                            <td><%= entry.noDosen %></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Role : </th>
+                                            <td><%= entry.roles %></td>
+                                        </tr>
+                                    </table>
+
                                 </div>
                             </div>
 
