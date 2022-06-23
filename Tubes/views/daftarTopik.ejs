@@ -26,22 +26,15 @@
                     <fieldset>
                         <legend>Search by Name</legend>
                         <input type="text" name="filter" value="<%= %>">
-                        <input type="submit" class="submitAkun" value="SEARCH">
+                        
                     </fieldset>
-                    
-                    
-                </form>
-                <form method="GET" action="/daftarTopik">
                     <select name="filterTahun">
-                        <option selected value=" "> </option>
+                        <option selected disabled>Cari berdasarkan tahun ajaran</option>
                         <option value="2020/2021">2020/2021</option>
                         <option value="2021/2022">2021/2022</option>
                     </select>
-                    <input type="submit" class="submitAkun" value="SEARCH">
-                </form>
-                <form method="GET" action="/daftarTopik">
                     <select name="filterStat">
-                        <option selected value=" "> </option>
+                        <option selected disabled>Cari berdasarkan status..</option>
                         <option value="NULL" name="NULL">NULL</option>
                         <option value="OK" name="OK">OK</option>
                         <option value="NO" name="NO">NO</option>

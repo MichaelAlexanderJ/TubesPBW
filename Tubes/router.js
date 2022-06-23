@@ -21,9 +21,9 @@ const getTopik = conn => {
     });
 };
 
-const getTopikbyNoDosen = (conn,noDosenData) => {
+const getTopikFilter = (conn,noDosenData,inputTahun,inputStatus) => {
     return new Promise((resolve, reject) => {
-        conn.query(`SELECT * FROM topik WHERE noDosen = ${noDosenData}` , (err, result)=> {
+        conn.query(`SELECT * FROM topik WHERE noDosen = ${noDosenData} AND tahunAjaran = ${inputTahun} AND statusSkripsi = ${inputStatus}` , (err, result)=> {
             if(err){
                 reject(err);
             }else{
@@ -32,28 +32,28 @@ const getTopikbyNoDosen = (conn,noDosenData) => {
         });
     });
 };
-const getTopikbyStatus = (conn,inputStatus) => {
-    return new Promise((resolve, reject) => {
-        conn.query(`SELECT * FROM topik WHERE statusSkripsi = '${inputStatus}'` , (err, result)=> {
-            if(err){
-                reject(err);
-            }else{
-                resolve(result);
-            }
-        });
-    });
-};
-const getTopikbyTahun = (conn,inputTahun) => {
-    return new Promise((resolve, reject) => {
-        conn.query(`SELECT * FROM topik WHERE tahunAjaran = '${inputTahun}'` , (err, result)=> {
-            if(err){
-                reject(err);
-            }else{
-                resolve(result);
-            }
-        });
-    });
-};
+// const getTopikbyStatus = (conn,inputStatus) => {
+//     return new Promise((resolve, reject) => {
+//         conn.query(`SELECT * FROM topik WHERE statusSkripsi = '${inputStatus}'` , (err, result)=> {
+//             if(err){
+//                 reject(err);
+//             }else{
+//                 resolve(result);
+//             }
+//         });
+//     });
+// };
+// const getTopikbyTahun = (conn,inputTahun) => {
+//     return new Promise((resolve, reject) => {
+//         conn.query(`SELECT * FROM topik WHERE tahunAjaran = '${inputTahun}'` , (err, result)=> {
+//             if(err){
+//                 reject(err);
+//             }else{
+//                 resolve(result);
+//             }
+//         });
+//     });
+// };
 
 const getKomen = (conn, idTopik) => {
     return new Promise((resolve, reject) => {
@@ -539,8 +539,6 @@ route.post('/skripsiSaya',express.urlencoded(), async(req,res) => {
 });
 
 
-
-
 route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     let results = await getTopik(conn);
@@ -551,51 +549,56 @@ route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
     const getTahun = req.query.filterTahun;
     const nama = req.session.name;
     const idTopik = req.body.kTopik
-
-    if(getName != undefined && getName.length > 0){
+    if(getName != undefined && getName.length > 0 && getStatus != undefined && getStatus.length > 0 && getTahun != undefined && getTahun.length > 0){
         let noDosen = await getNoDosen(conn,getName);
-        let noDosenData = noDosen[0].noDosen;
-        results = await getTopikbyNoDosen(conn,noDosenData);
-        if(req.session.loggedin){
-            res.render('daftarTopikDosen',{
-                results,comments, nama, idTopik, namaKomen
-            })
-        }
-        else{
-            req.flash('message','anda harus login terlebih dahulu')
-            res.redirect('/');
-        }
-    }
-    else if(getStatus != undefined && getStatus.length > 0){
         var stat = await getStatuSS(conn,getStatus);
-        var inputStatus = stat[0].statusSkripsi;
-        results = await getTopikbyStatus(conn,inputStatus);
-        console.log(inputStatus)
-        if(req.session.loggedin){
-            res.render('daftarTopikDosen',{
-                results,comments, nama, idTopik, namaKomen
-            })
-        }
-        else{
-            req.flash('message','anda harus login terlebih dahulu')
-            res.redirect('/');
-        }
-    }
-    else if(getTahun != undefined && getTahun.length > 0){
         var thnAjaran = await getThn(conn,getTahun);
+        let noDosenData = noDosen[0].noDosen;
+        var inputStatus = stat[0].statusSkripsi;
         var inputTahun = thnAjaran[0].tahunAjaran;
-        console.log(inputTahun)
-        results = await getTopikbyTahun(conn,inputTahun);
+        results = await getTopikFilter(conn,noDosenData, inputTahun, inputStatus);
         if(req.session.loggedin){
-            res.render('daftarTopikDosen',{
+            res.render('daftarTopik',{
                 results,comments, nama, idTopik, namaKomen
             })
+            
         }
         else{
             req.flash('message','anda harus login terlebih dahulu')
             res.redirect('/');
         }
-    }
+        console.log(noDosenData)
+     }
+    // else if(getStatus != undefined && getStatus.length > 0){
+    //     var stat = await getStatuSS(conn,getStatus);
+    //     var inputStatus = stat[0].statusSkripsi;
+    //     results = await getTopikbyStatus(conn,inputStatus);
+    //     console.log(inputStatus)
+    //     if(req.session.loggedin){
+    //         res.render('daftarTopikDosen',{
+    //             results,comments, nama, idTopik, namaKomen
+    //         })
+    //     }
+    //     else{
+    //         req.flash('message','anda harus login terlebih dahulu')
+    //         res.redirect('/');
+    //     }
+    // }
+    // else if(getTahun != undefined && getTahun.length > 0){
+    //     var thnAjaran = await getThn(conn,getTahun);
+    //     var inputTahun = thnAjaran[0].tahunAjaran;
+    //     console.log(inputTahun)
+    //     results = await getTopikbyTahun(conn,inputTahun);
+    //     if(req.session.loggedin){
+    //         res.render('daftarTopikDosen',{
+    //             results,comments, nama, idTopik, namaKomen
+    //         })
+    //     }
+    //     else{
+    //         req.flash('message','anda harus login terlebih dahulu')
+    //         res.redirect('/');
+    //     }
+    // }
     else if(req.session.loggedin){
         res.render('daftarTopik',{
             results, comments, nama, idTopik, namaKomen
