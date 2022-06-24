@@ -1,9 +1,8 @@
 import express, { query } from 'express';
-import path, { resolve } from 'path';
 import mysql from 'mysql';
 import { flash } from 'express-flash-message';
-import { get } from 'http';
-import alert from 'alert';
+
+
 
 var route = express.Router();
 

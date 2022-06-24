@@ -1,11 +1,8 @@
 import express, { query } from 'express';
 import path, { resolve } from 'path';
-import mysql from 'mysql';
 import {route} from './router.js'
 import bodyParser from 'body-parser';
 import session from 'express-session';
-import alert from 'alert';
-import * as popup from 'node-popup';
 import flash from 'connect-flash'
 
 const PORT = 8080;
