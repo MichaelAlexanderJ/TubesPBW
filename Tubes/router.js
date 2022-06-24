@@ -779,13 +779,13 @@ route.post('/daftarTopikExportToPDF',express.urlencoded(), async(req,res) => {
         },
     };
     res.render('laporanDaftarTopik',{results},function(err,html){
-        pdf.create(html,options).toFile('./views/laporan/LaporanTopikSkripsi.pdf'), function(err,result) {
+        pdf.create(html,options).toFile('./views/laporan/LaporanTopikSkripsi.pdf',function(err,result) {
             if(err){console.log(err)}
             else{
                 console.log('file created');
-                res.redirect('/daftarTopikDosen');
+                res.redirect('/daftarTopik');
             }
-        }
+        });
     })
     conn.release();
     });
