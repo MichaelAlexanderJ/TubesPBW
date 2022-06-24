@@ -1,10 +1,14 @@
 import express, { query } from 'express';
 import mysql from 'mysql';
 import { flash } from 'express-flash-message';
-
-
+import pdf from 'html-pdf';
+import ejs from 'ejs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 var route = express.Router();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // query
 
@@ -762,8 +766,31 @@ route.post('/daftarTopik2',express.urlencoded(), async(req,res) => {
 
 //Generate Report PDF
 route.post('/daftarTopikExportToPDF',express.urlencoded(), async(req,res) => {
-    const doc = new PDFDocument;
-    doc.addPage();
+    ejs.renderFile(path.join(__dirname,'views/laporanDaftarTopik.ejs/'), (err,data) => {
+        if(err){
+            res.send(err);
+        }
+        else{
+            let options = {
+                'height':'11.25in',
+                'width' :'8.5in',
+                'header':{
+                    'height':'20mm'
+                },
+                'footer':{
+                    'height':'20mm',
+                },
+            };
+        pdf.create(data,options).toFile('laporanTopikSkripsi.pdf',function(err,data){
+            if(err){
+                send(err);
+            }
+            else{
+                res.send('File Created');
+            }
+        });
+    }
+    });
     
     });
 
