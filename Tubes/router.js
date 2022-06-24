@@ -5,7 +5,7 @@ import pdf from 'html-pdf';
 import ejs from 'ejs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
+import fs from 'fs';
 var route = express.Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -766,32 +766,28 @@ route.post('/daftarTopik2',express.urlencoded(), async(req,res) => {
 
 //Generate Report PDF
 route.post('/daftarTopikExportToPDF',express.urlencoded(), async(req,res) => {
-    ejs.renderFile(path.join(__dirname,'views/laporanDaftarTopik.ejs/'), (err,data) => {
-        if(err){
-            res.send(err);
-        }
-        else{
-            let options = {
-                'height':'11.25in',
-                'width' :'8.5in',
-                'header':{
-                    'height':'20mm'
-                },
-                'footer':{
-                    'height':'20mm',
-                },
-            };
-        pdf.create(data,options).toFile('laporanTopikSkripsi.pdf',function(err,data){
-            if(err){
-                send(err);
-            }
+    const conn = await dbConnect();
+    let results = await getTopik(conn);
+    let options = {
+        "height": "11.25in",
+        "width": "8.5in",
+        "header": {
+            "height": "20mm"
+        },
+        "footer": {
+            "height": "20mm",
+        },
+    };
+    res.render('laporanDaftarTopik',{results},function(err,html){
+        pdf.create(html,options).toFile('./views/laporan/LaporanTopikSkripsi.pdf'), function(err,result) {
+            if(err){console.log(err)}
             else{
-                res.send('File Created');
+                console.log('file created');
+                res.redirect('/daftarTopikDosen');
             }
-        });
-    }
-    });
-    
+        }
+    })
+    conn.release();
     });
 
 

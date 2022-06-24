@@ -4,6 +4,7 @@ import {route} from './router.js'
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import flash from 'connect-flash'
+import pdf from 'html-pdf'
 
 const PORT = 8080;
 const app = express();
