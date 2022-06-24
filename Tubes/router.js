@@ -610,6 +610,78 @@ route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
     conn.release();
     });
 
+// getLaporanDaftarTopik
+route.get('/laporanDaftarTopik',express.urlencoded(), async(req,res) => {
+    const conn = await dbConnect();
+    let results = await getTopik(conn);
+    let comments = await getKomen(conn);
+    let namaKomen = await getNamaD(conn)
+    const getName = req.query.filter;
+    const getStatus = req.query.filterStat;
+    const getTahun = req.query.filterTahun;
+    const nama = req.session.name;
+    const idTopik = req.body.kTopik
+    if(getName != undefined && getName.length > 0 && getStatus != undefined && getStatus.length > 0 && getTahun != undefined && getTahun.length > 0){
+        let noDosen = await getNoDosen(conn,getName);
+        var stat = await getStatuSS(conn,getStatus);
+        var thnAjaran = await getThn(conn,getTahun);
+        let noDosenData = noDosen[0].noDosen;
+        var inputStatus = stat[0].statusSkripsi;
+        var inputTahun = thnAjaran[0].tahunAjaran;
+        results = await getTopikFilter(conn,noDosenData, inputTahun, inputStatus);
+        if(req.session.loggedin){
+            res.render('daftarTopik',{
+                results,comments, nama, idTopik, namaKomen
+            })
+            
+        }
+        else{
+            req.flash('message','anda harus login terlebih dahulu')
+            res.redirect('/');
+        }
+        console.log(noDosenData)
+     }
+    // else if(getStatus != undefined && getStatus.length > 0){
+    //     var stat = await getStatuSS(conn,getStatus);
+    //     var inputStatus = stat[0].statusSkripsi;
+    //     results = await getTopikbyStatus(conn,inputStatus);
+    //     console.log(inputStatus)
+    //     if(req.session.loggedin){
+    //         res.render('daftarTopikDosen',{
+    //             results,comments, nama, idTopik, namaKomen
+    //         })
+    //     }
+    //     else{
+    //         req.flash('message','anda harus login terlebih dahulu')
+    //         res.redirect('/');
+    //     }
+    // }
+    // else if(getTahun != undefined && getTahun.length > 0){
+    //     var thnAjaran = await getThn(conn,getTahun);
+    //     var inputTahun = thnAjaran[0].tahunAjaran;
+    //     console.log(inputTahun)
+    //     results = await getTopikbyTahun(conn,inputTahun);
+    //     if(req.session.loggedin){
+    //         res.render('daftarTopikDosen',{
+    //             results,comments, nama, idTopik, namaKomen
+    //         })
+    //     }
+    //     else{
+    //         req.flash('message','anda harus login terlebih dahulu')
+    //         res.redirect('/');
+    //     }
+    // }
+    else if(req.session.loggedin){
+        res.render('laporanDaftarTopik',{
+            results, comments, nama, idTopik, namaKomen
+        });
+    }else{
+        req.flash('message', 'Anda harus login terlebih dahulu');
+        res.redirect('/')
+    }
+    conn.release();
+    });
+
 route.get('/daftarTopik2',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     let results = await getTopik(conn);

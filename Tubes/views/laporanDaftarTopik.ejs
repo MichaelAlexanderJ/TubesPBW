@@ -18,115 +18,41 @@
             <a href="http://localhost:8080/homeAdmin">
                 <img src="assets/images/leftArrow.png" alt="">
             </a>
-
             <h3>Daftar Topik Skripsi</h3>
             <p class="dueDateUnggah">Due/05/2022</p>
-            <div class="searchAkun">
-                <form method="GET" action="/daftarTopik">
-                    <fieldset>
-                        <legend>Search by Name</legend>
-                        <input type="text" name="filter" value="<%= %>">
-                        
-                    </fieldset>
-                    <select name="filterTahun">
-                        <option selected disabled>Cari berdasarkan tahun ajaran</option>
-                        <option value="2020/2021">2020/2021</option>
-                        <option value="2021/2022">2021/2022</option>
-                    </select>
-                    <select name="filterStat">
-                        <option selected disabled>Cari berdasarkan status..</option>
-                        <option value="NULL" name="NULL">NULL</option>
-                        <option value="OK" name="OK">OK</option>
-                        <option value="NO" name="NO">NO</option>
-                        <option value="INQ" name="INQ">INQ</option>
-                        <option value="OPEN" name="OK">OPEN</option>
-                        <option value="CLOSE" name="NO">CLOSE</option>
-                        <option value="TAKEN" name="INQ">TAKEN</option>
-                    </select>
-                    <input type="submit" class="submitAkun" value="SEARCH">
-                </form>
-                
-            </div>
-            
-            <div class="exportToPDF">
-                <form action="/daftarTopik" method="post">
-                    <input type="submit" value="Generate Report">
-                </form>
-            </div>
             
         </div>
         <br>
         <div class="skripsiSayaMain">
             <div class="innerMain">
-                <% for(const row of results) { %> 
                 <a class="wrapper">
                     <div class="innerMain1">
-                        <div class="icon">
-                            <img src="assets/images/bookIcon.jpg" class="bookIcon" alt="">
-                        </div>
                         <div class="textContent">
-                            <h3><%= row.judulTopik %></h3>
-                            <p><%= row.idTopik %></p>
-                            <p><%= row.peminatan %></p>
+                            <% for(const row of results) { %> 
+                            <table>
+                                <tr>
+                                    <th>ID Topik</th>
+                                    <th>Judul Topik</th>
+                                    <th>Peminatan</th>
+                                    <th>Tipe</th>
+                                    <th>No Dosen</th>
+                                    <th>Tahun Ajaran</th>
+                                    <th>Status Skripsi</th>
+                                </tr>
+
+                                <tr>
+                                    <td><%= row.idTopik %></td>
+                                    <td><%= row.judulTopik %></td>
+                                    <td><%= row.peminatan %></td>
+                                    <td><%= row.tipe %></td>
+                                    <td><%= row.noDosen %></td>
+                                    <td><%= row.tahunAjaran %></td>
+                                    <td><%= row.statusSkripsi %></td>
+                                </tr>
+                            </table>
+                            <% } %> 
                         </div>
 
-                        <div class="editButton">
-                            <form action="/daftarTopik" method="post">
-                            <div>
-                                <p>Status: <b><%= row.statusSkripsi %></b> </p>
-                                    <select name="gantiStat">
-                                        <option selected value="<%= row.statusSkripsi %>"> </option>
-                                        <option value="OK" name="OK">OK</option>
-                                        <option value="NO" name="NO">NO</option>
-                                        <option value="INQ" name="INQ">INQ</option>
-                                    </select>
-                                    <br>
-                                    <input type="hidden" name ="noTopik" value="<%= row.idTopik %>">
-                                    <input type="submit" name="updateStat" onclick="redirect" value="Ganti Status">
-                                    <br>
-                                </form>
-                                    <form action="/daftarTopik3" method="post">
-                                        <input type="hidden" name ="noTopik" value="<%= row.idTopik %>">
-                                        <input type="submit" name="deleteTopik" onclick="redirect" value="DELETE">
-                                    </form>
-                                
-                            </div>
-                        </div>
-                        
-                        <!-- bagian Comments -->
-                    </div>
-
-                    <button class="showKomen" onclick="myFunction()">Show Comments</button>
-                    <br><br>
-                    <div id="comments">
-                        <div class="innerComments">
-                            <div class="isiKomentar">
-                                <% for(const row of namaKomen) { %> 
-                                    <input type="hidden" name ="plisTopik" value="<%= row.idTopik %>">
-                                <div class="name">
-                                    <!-- Nama si Penkomen -->
-                                    <fieldset>
-                                        <h1><%= row.namaD %></h1>
-                                    </fieldset>
-                                </div>
-                                <!-- isi komentarnya -->
-                                <fieldset>
-                                    <h1><%= row.komentar %></h1>
-                                </fieldset>
-                                <% } %> 
-                            </div>
-
-                            <div class="inputKomentar">
-                                <h3>Post A Comment</h3>
-                                <form action="/daftarTopik2" method="post">
-                                    <textarea name="komentar" id="" cols="30" rows="10" placeholder="Masukkan comment.."></textarea>
-                                    <br>
-                                    <input type="hidden" name ="kTopik" value="<%= row.idTopik %>">
-                                    <input type="submit" name="" onclick="redirect" value="Submit Comment">
-                                </form>
-                            </div>
-
-                        </div>
                     </div>
                 </a>
 
@@ -142,8 +68,6 @@
                   }
                 }
                 </script>
-                
-                <% } %> 
             </div>
         </div>
     </div>
