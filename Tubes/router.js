@@ -689,6 +689,13 @@ route.post('/daftarTopik2',express.urlencoded(), async(req,res) => {
     conn.release();
 });
 
+//Generate Report PDF
+route.post('/daftarTopikExportToPDF',express.urlencoded(), async(req,res) => {
+    const doc = new PDFDocument;
+    doc.addPage();
+    
+    });
+
 
 route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
     const getName = req.query.filter;
