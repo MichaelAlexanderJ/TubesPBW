@@ -21,9 +21,9 @@ const getTopik = conn => {
     });
 };
 
-const getTopikFilter = (conn,noDosenData,inputTahun,inputStatus) => {
+const getTopikFilter = (conn,getName) => {
     return new Promise((resolve, reject) => {
-        conn.query(`SELECT * FROM topik WHERE noDosen = ${noDosenData} AND tahunAjaran = ${inputTahun} AND statusSkripsi = ${inputStatus}` , (err, result)=> {
+        conn.query(`SELECT * FROM topik JOIN dosen ON topik.noDosen = dosen.noDosen WHERE dosen.namaD LIKE '%${getName}%' ` , (err, result)=> {
             if(err){
                 reject(err);
             }else{
@@ -57,7 +57,7 @@ const getTopikFilter = (conn,noDosenData,inputTahun,inputStatus) => {
 
 const getKomen = (conn, idTopik) => {
     return new Promise((resolve, reject) => {
-        conn.query(`SELECT dosen.namaD AS namadosen, review.komentar AS komendosen, review.idTopik FROM review JOIN topik ON review.idTopik = topik.idTopik JOIN dosen ON topik.noDosen = dosen.noDosen WHERE review.idTopik ='%${idTopik}%'`, (err, result)=> {
+        conn.query(`SELECT dosen.namaD AS namadosen, review.komentar AS komendosen, review.idTopik FROM review JOIN topik ON review.idTopik = topik.idTopik JOIN dosen ON topik.noDosen = dosen.noDosen WHERE review.idTopik ='${idTopik}'`, (err, result)=> {
             if(err){
                 reject(err);
             }else{
@@ -67,9 +67,9 @@ const getKomen = (conn, idTopik) => {
     });
 }
 
-const getNamaD = (conn) => {
+const getNamaD = (conn,idTopik) => {
     return new Promise((resolve,reject) => {
-        conn.query(`SELECT dosen.namaD, review.komentar, review.idTopik FROM dosen JOIN review ON dosen.noDosen = review.noDosen`, (err,result) => {
+        conn.query(`SELECT * FROM dosen JOIN review ON dosen.noDosen = review.noDosen WHERE idTopik ='${idTopik}'`, (err,result) => {
             if(err){
                 reject(err);
             }else{
@@ -355,17 +355,12 @@ route.get('/daftarTopikDosen',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     let results = await getTopik(conn);
     let comments = await getKomen(conn);
-    let namaKomen = await getNamaD(conn)
+    const idTopik = req.body.aTopik
+    let namaKomen = await getNamaD(conn,idTopik)
     const getName = req.query.filter;
-    const getStatus = req.query.filterStat;
-    const getTahun = req.query.filterTahun;
     const nama = req.session.name;
-    const idTopik = req.body.kTopik
-
-    if(getName != undefined && getName.length > 0){
-        let noDosen = await getNoDosen(conn,getName);
-        let noDosenData = noDosen[0].noDosen;
-        results = await getTopikbyNoDosen(conn,noDosenData);
+    if(getName != undefined && getName.length){
+        results = await getTopikFilter(conn,getName);
         if(req.session.loggedin){
             res.render('daftarTopikDosen',{
                 results,comments, nama, idTopik, namaKomen
@@ -375,37 +370,7 @@ route.get('/daftarTopikDosen',express.urlencoded(), async(req,res) => {
             req.flash('message','anda harus login terlebih dahulu')
             res.redirect('/');
         }
-    }
-    else if(getStatus != undefined && getStatus.length > 0){
-        var stat = await getStatuSS(conn,getStatus);
-        var inputStatus = stat[0].statusSkripsi;
-        results = await getTopikbyStatus(conn,inputStatus);
-        console.log(inputStatus)
-        if(req.session.loggedin){
-            res.render('daftarTopikDosen',{
-                results,comments, nama, idTopik, namaKomen
-            })
-        }
-        else{
-            req.flash('message','anda harus login terlebih dahulu')
-            res.redirect('/');
-        }
-    }
-    else if(getTahun != undefined && getTahun.length > 0){
-        var thnAjaran = await getThn(conn,getTahun);
-        var inputTahun = thnAjaran[0].tahunAjaran;
-        console.log(inputTahun)
-        results = await getTopikbyTahun(conn,inputTahun);
-        if(req.session.loggedin){
-            res.render('daftarTopikDosen',{
-                results,comments, nama, idTopik, namaKomen
-            })
-        }
-        else{
-            req.flash('message','anda harus login terlebih dahulu')
-            res.redirect('/');
-        }
-    }
+     }
     else if(req.session.loggedin){
         res.render('daftarTopikDosen',{
             results, comments, nama, idTopik, namaKomen
@@ -415,6 +380,7 @@ route.get('/daftarTopikDosen',express.urlencoded(), async(req,res) => {
         res.redirect('/')
     }
     conn.release();
+    console.log(idTopik)
     });
 
     route.post('/daftarTopikDosen2',express.urlencoded(), async(req,res) => {
@@ -545,60 +511,21 @@ route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
     let comments = await getKomen(conn);
     let namaKomen = await getNamaD(conn)
     const getName = req.query.filter;
-    const getStatus = req.query.filterStat;
-    const getTahun = req.query.filterTahun;
     const nama = req.session.name;
     const idTopik = req.body.kTopik
-    if(getName != undefined && getName.length > 0 && getStatus != undefined && getStatus.length > 0 && getTahun != undefined && getTahun.length > 0){
-        let noDosen = await getNoDosen(conn,getName);
-        var stat = await getStatuSS(conn,getStatus);
-        var thnAjaran = await getThn(conn,getTahun);
-        let noDosenData = noDosen[0].noDosen;
-        var inputStatus = stat[0].statusSkripsi;
-        var inputTahun = thnAjaran[0].tahunAjaran;
-        results = await getTopikFilter(conn,noDosenData, inputTahun, inputStatus);
+    if(getName != undefined && getName.length){
+        results = await getTopikFilter(conn,getName);
         if(req.session.loggedin){
             res.render('daftarTopik',{
                 results,comments, nama, idTopik, namaKomen
             })
-            
         }
         else{
             req.flash('message','anda harus login terlebih dahulu')
             res.redirect('/');
         }
-        console.log(noDosenData)
+        console.log(results)
      }
-    // else if(getStatus != undefined && getStatus.length > 0){
-    //     var stat = await getStatuSS(conn,getStatus);
-    //     var inputStatus = stat[0].statusSkripsi;
-    //     results = await getTopikbyStatus(conn,inputStatus);
-    //     console.log(inputStatus)
-    //     if(req.session.loggedin){
-    //         res.render('daftarTopikDosen',{
-    //             results,comments, nama, idTopik, namaKomen
-    //         })
-    //     }
-    //     else{
-    //         req.flash('message','anda harus login terlebih dahulu')
-    //         res.redirect('/');
-    //     }
-    // }
-    // else if(getTahun != undefined && getTahun.length > 0){
-    //     var thnAjaran = await getThn(conn,getTahun);
-    //     var inputTahun = thnAjaran[0].tahunAjaran;
-    //     console.log(inputTahun)
-    //     results = await getTopikbyTahun(conn,inputTahun);
-    //     if(req.session.loggedin){
-    //         res.render('daftarTopikDosen',{
-    //             results,comments, nama, idTopik, namaKomen
-    //         })
-    //     }
-    //     else{
-    //         req.flash('message','anda harus login terlebih dahulu')
-    //         res.redirect('/');
-    //     }
-    // }
     else if(req.session.loggedin){
         res.render('daftarTopik',{
             results, comments, nama, idTopik, namaKomen
@@ -649,9 +576,7 @@ route.get('/daftarTopik3',express.urlencoded(), async(req,res) => {
 route.post('/daftarTopik',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     const ubahStat = req.body.gantiStat;
-    const komen = req.body.komentar;
     const idTopik = req.body.noTopik;
-    const nama = req.session.name;
     var sql = `UPDATE topik SET statusSkripsi = '${ubahStat}' WHERE idTopik ='${idTopik}'`
     conn.query(sql, [ubahStat,idTopik], ()=>{
         res.redirect('/daftarTopik')
@@ -662,10 +587,7 @@ route.post('/daftarTopik',express.urlencoded(), async(req,res) => {
 //delete topik
 route.post('/daftarTopik3',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
-    const ubahStat = req.body.gantiStat;
-    const komen = req.body.komentar;
     const idTopik = req.body.noTopik;
-    const nama = req.session.name;
     var sql = `DELETE FROM topik WHERE idTopik ='${idTopik}'`
     conn.query(sql, [idTopik], ()=>{
         res.redirect('/daftarTopik')
