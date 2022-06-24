@@ -1,11 +1,14 @@
 import express, { query } from 'express';
-import path, { resolve } from 'path';
 import mysql from 'mysql';
 import { flash } from 'express-flash-message';
-import { get } from 'http';
-import alert from 'alert';
-
+import pdf from 'html-pdf';
+import ejs from 'ejs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
 var route = express.Router();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // query
 
@@ -537,6 +540,78 @@ route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
     conn.release();
     });
 
+// getLaporanDaftarTopik
+route.get('/laporanDaftarTopik',express.urlencoded(), async(req,res) => {
+    const conn = await dbConnect();
+    let results = await getTopik(conn);
+    let comments = await getKomen(conn);
+    let namaKomen = await getNamaD(conn)
+    const getName = req.query.filter;
+    const getStatus = req.query.filterStat;
+    const getTahun = req.query.filterTahun;
+    const nama = req.session.name;
+    const idTopik = req.body.kTopik
+    if(getName != undefined && getName.length > 0 && getStatus != undefined && getStatus.length > 0 && getTahun != undefined && getTahun.length > 0){
+        let noDosen = await getNoDosen(conn,getName);
+        var stat = await getStatuSS(conn,getStatus);
+        var thnAjaran = await getThn(conn,getTahun);
+        let noDosenData = noDosen[0].noDosen;
+        var inputStatus = stat[0].statusSkripsi;
+        var inputTahun = thnAjaran[0].tahunAjaran;
+        results = await getTopikFilter(conn,noDosenData, inputTahun, inputStatus);
+        if(req.session.loggedin){
+            res.render('daftarTopik',{
+                results,comments, nama, idTopik, namaKomen
+            })
+            
+        }
+        else{
+            req.flash('message','anda harus login terlebih dahulu')
+            res.redirect('/');
+        }
+        console.log(noDosenData)
+     }
+    // else if(getStatus != undefined && getStatus.length > 0){
+    //     var stat = await getStatuSS(conn,getStatus);
+    //     var inputStatus = stat[0].statusSkripsi;
+    //     results = await getTopikbyStatus(conn,inputStatus);
+    //     console.log(inputStatus)
+    //     if(req.session.loggedin){
+    //         res.render('daftarTopikDosen',{
+    //             results,comments, nama, idTopik, namaKomen
+    //         })
+    //     }
+    //     else{
+    //         req.flash('message','anda harus login terlebih dahulu')
+    //         res.redirect('/');
+    //     }
+    // }
+    // else if(getTahun != undefined && getTahun.length > 0){
+    //     var thnAjaran = await getThn(conn,getTahun);
+    //     var inputTahun = thnAjaran[0].tahunAjaran;
+    //     console.log(inputTahun)
+    //     results = await getTopikbyTahun(conn,inputTahun);
+    //     if(req.session.loggedin){
+    //         res.render('daftarTopikDosen',{
+    //             results,comments, nama, idTopik, namaKomen
+    //         })
+    //     }
+    //     else{
+    //         req.flash('message','anda harus login terlebih dahulu')
+    //         res.redirect('/');
+    //     }
+    // }
+    else if(req.session.loggedin){
+        res.render('laporanDaftarTopik',{
+            results, comments, nama, idTopik, namaKomen
+        });
+    }else{
+        req.flash('message', 'Anda harus login terlebih dahulu');
+        res.redirect('/')
+    }
+    conn.release();
+    });
+
 route.get('/daftarTopik2',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     let results = await getTopik(conn);
@@ -610,6 +685,32 @@ route.post('/daftarTopik2',express.urlencoded(), async(req,res) => {
     })
     conn.release();
 });
+
+//Generate Report PDF
+route.post('/daftarTopikExportToPDF',express.urlencoded(), async(req,res) => {
+    const conn = await dbConnect();
+    let results = await getTopik(conn);
+    let options = {
+        "height": "11.25in",
+        "width": "8.5in",
+        "header": {
+            "height": "20mm"
+        },
+        "footer": {
+            "height": "20mm",
+        },
+    };
+    res.render('laporanDaftarTopik',{results},function(err,html){
+        pdf.create(html,options).toFile('./views/laporan/LaporanTopikSkripsi.pdf',function(err,result) {
+            if(err){console.log(err)}
+            else{
+                console.log('file created');
+                res.redirect('/daftarTopik');
+            }
+        });
+    })
+    conn.release();
+    });
 
 
 route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {

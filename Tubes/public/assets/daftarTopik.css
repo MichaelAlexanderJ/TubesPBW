@@ -153,6 +153,7 @@ fieldset{
 /* Bagian Komentar */
 .showKomen{
     margin-top: 1rem;
+    border-radius: 0.5rem;
 }
 
 #comments{
