@@ -9,18 +9,8 @@
 </head>
 
 <body>
-    <header>
-        <%- include('./layout/head.ejs') %>
-    </header>
-    <div class="skripsiSayaContainer" name="article">
-        <div class="skripsiSayaTop">
-
-            <a href="http://localhost:8080/homeAdmin">
-                <img src="assets/images/leftArrow.png" alt="">
-            </a>
             <h3>Daftar Topik Skripsi</h3>
             <p class="dueDateUnggah">Due/05/2022</p>
-            
         </div>
         <br>
         <div class="skripsiSayaMain">
@@ -55,26 +45,8 @@
 
                     </div>
                 </a>
-
-                <script>
-                    function myFunction() {
-                  var x = document.getElementById("comments");
-                  if (x.style.display === "none") {
-                    x.style.display = "block";
-                    console.log(x.style.display);
-                  } else {
-                    x.style.display = "none";
-                    console.log(x.style.display);
-                  }
-                }
-                </script>
             </div>
         </div>
     </div>
-
-    <footer>
-        <%- include('./layout/footer.ejs') %>
-    </footer>
-
 </body>
 </html>
