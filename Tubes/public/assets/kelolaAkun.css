@@ -135,6 +135,15 @@ fieldset{
     margin: 1rem;
 }
 
+.containerNama{
+    align-items: center;
+    text-align: center;
+    width: 8rem;
+    height: 8rem;
+    display: flex;
+    flex-wrap: wrap;
+}
+
 /* CSS Container Info Akun */
 
 .tableInfo{
