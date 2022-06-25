@@ -356,9 +356,14 @@ route.get('/home', async(req,res) => {
     var noID = req.session.noID;
     var roleD = req.session.role;
     if(req.session.loggedin){
-        res.render('home', {
-            nama, noID, roleD
-        });
+        if(roleD == "Dosen"){
+            res.render('home', {
+                nama, noID, roleD
+            });
+        }
+        else{
+            res.redirect('/homeAdmin')
+        }
     } else {
         req.flash('message', 'Anda harus login terlebih dahulu');
         res.redirect('/')
@@ -378,9 +383,14 @@ route.get('/daftarTopikDosen',express.urlencoded(), async(req,res) => {
     if(getName != undefined && getName.length){
         results = await getTopikFilter(conn,getName);
         if(req.session.loggedin){
-            res.render('daftarTopikDosen',{
-                results,comments, nama, idTopik, namaKomen
-            })
+            if(req.session.role == "Dosen"){
+                res.render('daftarTopikDosen',{
+                    results,comments, nama, idTopik, namaKomen
+                })
+            }
+            else{
+                res.redirect('/daftarTopik')
+            }
         }
         else{
             req.flash('message','anda harus login terlebih dahulu')
@@ -388,15 +398,20 @@ route.get('/daftarTopikDosen',express.urlencoded(), async(req,res) => {
         }
      }
     else if(req.session.loggedin){
-        res.render('daftarTopikDosen',{
-            results, comments, nama, idTopik, namaKomen
-        });
+        if(req.session.role == "Dosen"){
+            res.render('daftarTopikDosen',{
+                results,comments, nama, idTopik, namaKomen
+            })
+        }
+        else{
+            res.redirect('/daftarTopik')
+        }
     }else{
         req.flash('message', 'Anda harus login terlebih dahulu');
         res.redirect('/')
     }
     conn.release();
-    console.log(idTopik)
+    console.log(req.session.role)
     });
 
     route.post('/daftarTopikDosen2',express.urlencoded(), async(req,res) => {
@@ -427,9 +442,14 @@ route.get('/homeAdmin',express.urlencoded(), async(req,res) => {
     const periode = await getPeriode(conn);
     const displayPeriode = JSON.stringify(periode)
     if(req.session.loggedin){
-        res.render('homeAdmin', {
-            nama, noID, roleD, periode
-        });
+        if(roleD == "Admin"){
+            res.render('homeAdmin', {
+                nama, noID, roleD, periode
+            });
+        }
+        else{
+            res.send('Anda tidak memiliki akses')
+        }
     } else {
         req.flash('message', 'Anda harus login terlebih dahulu');
         res.redirect('/')
@@ -531,9 +551,13 @@ route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
     if(getName != undefined && getName.length){
         results = await getTopikFilter(conn,getName);
         if(req.session.loggedin){
-            res.render('daftarTopik',{
-                results,comments, nama, idTopik, namaKomen
-            })
+            if(req.session.role == "Admin"){
+                res.render('daftarTopik',{
+                    results,comments, nama, idTopik, namaKomen
+                })
+            }else{
+                res.send('Anda tidak memiliki akses')
+            }
         }
         else{
             req.flash('message','anda harus login terlebih dahulu')
@@ -542,9 +566,13 @@ route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
         console.log(results)
      }
     else if(req.session.loggedin){
-        res.render('daftarTopik',{
-            results, comments, nama, idTopik, namaKomen
-        });
+        if(req.session.role == "Admin"){
+            res.render('daftarTopik',{
+                results,comments, nama, idTopik, namaKomen
+            })
+        }else{
+            res.send('Anda tidak memiliki akses')
+        }
     }else{
         req.flash('message', 'Anda harus login terlebih dahulu');
         res.redirect('/')
@@ -572,10 +600,14 @@ route.get('/laporanDaftarTopik',express.urlencoded(), async(req,res) => {
         var inputTahun = thnAjaran[0].tahunAjaran;
         results = await getTopikFilter(conn,noDosenData, inputTahun, inputStatus);
         if(req.session.loggedin){
-            res.render('daftarTopik',{
-                results,comments, nama, idTopik, namaKomen
-            })
-            
+            if(req.session.role=="Admin"){
+                res.render('daftarTopik',{
+                    results,comments, nama, idTopik, namaKomen
+                })
+            }
+            else{
+                res.send('Anda tidak memiliki akses')
+            }
         }
         else{
             req.flash('message','anda harus login terlebih dahulu')
@@ -614,9 +646,14 @@ route.get('/laporanDaftarTopik',express.urlencoded(), async(req,res) => {
     //     }
     // }
     else if(req.session.loggedin){
-        res.render('laporanDaftarTopik',{
-            results, comments, nama, idTopik, namaKomen
-        });
+        if(req.session.role=="Admin"){
+            res.render('laporanDaftarTopik',{
+                results,comments, nama, idTopik, namaKomen
+            })
+        }
+        else{
+            res.send('Anda tidak memiliki akses')
+        }
     }else{
         req.flash('message', 'Anda harus login terlebih dahulu');
         res.redirect('/')
@@ -632,9 +669,14 @@ route.get('/daftarTopik2',express.urlencoded(), async(req,res) => {
     const nama = req.session.name;
     const idTopik = req.body.plisTopik
     if(req.session.loggedin){
-        res.render('daftarTopik',{
-            results, comments, nama, idTopik, namaKomen
-        });
+        if(req.session.role=="Admin"){
+            res.render('daftarTopik',{
+                results,comments, nama, idTopik, namaKomen
+            })
+        }
+        else{
+            res.send('Anda tidak memiliki akses')
+        }
     }else{
         req.flash('message', 'Anda harus login terlebih dahulu');
         res.redirect('/')
@@ -650,9 +692,14 @@ route.get('/daftarTopik3',express.urlencoded(), async(req,res) => {
     const nama = req.session.name;
     const idTopik = req.body.kTopik
     if(req.session.loggedin){
-        res.render('daftarTopik',{
-            results, comments, nama, idTopik, namaKomen
-        });
+        if(req.session.role=="Admin"){
+            res.render('daftarTopik',{
+                results,comments, nama, idTopik, namaKomen
+            })
+        }
+        else{
+            res.send('Anda tidak memiliki akses')
+        }
     }else{
         req.flash('message', 'Anda harus login terlebih dahulu');
         res.redirect('/')
@@ -747,9 +794,13 @@ route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
             iteration -= (page+1) - numPages;
         }
         if(req.session.loggedin){
-            res.render('kelolaAkun',{
-                results : results,page,iteration,ending,numPages
-            })
+            if(req.session.role="Admin"){
+                res.render('kelolaAkun',{
+                    results : results,page,iteration,ending,numPages
+                })
+            }else{
+                res.send('Anda tidak memiliki akses')
+            }
         }
         else{
             req.flash('message','anda harus login terlebih dahulu')
@@ -759,9 +810,14 @@ route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
     if(getName != undefined && getName.length > 0){
         results = await getNameF(conn,getName);
         if(req.session.loggedin){
-            res.render('kelolaAkun',{
-                results : results,page,iteration,ending,numPages
-            })
+            if(req.session.role =="Admin"){
+                res.render('kelolaAkun',{
+                    results : results,page,iteration,ending,numPages
+                })
+            }
+            else{
+                res.send('Anda tidak memiliki akses')
+            }
         }
         else{
             req.flash('message','anda harus login terlebih dahulu')
@@ -774,7 +830,12 @@ route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
 route.post('/kelolaAkun',express.urlencoded(),async(req,res)=>{
     const conn = await dbConnect();
     if(req.session.loggedin){
-        res.redirect('kelolaAkunLanjutan');
+        if(req.session.role=="Admin"){
+            res.redirect('kelolaAkunLanjutan');
+        }
+        else{
+            res.send('Anda tidak memiliki akses')
+        }
     }
     else{
         req.flash('message','anda harus login terlebih dahulu')
@@ -787,9 +848,12 @@ route.get('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
     const conn = await dbConnect();
     conn.release();
     if(req.session.loggedin){
-        res.render('kelolaAkunLanjutan',{
-
-        })
+        if(req.session.role=="Admin"){
+            res.redirect('kelolaAkunLanjutan');
+        }
+        else{
+            res.send('Anda tidak memiliki akses')
+        }
     }
     else{
         req.flash('message','anda harus login terlebih dahulu')
@@ -824,9 +888,14 @@ route.post('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
 //Post add user Page
 route.post('/addUserPage',async(req,res) =>{
     if(req.session.loggedin){
-        const conn = await dbConnect();
+        if(req.session.role =="Admin"){
+            const conn = await dbConnect();
         res.redirect('/addUser');
         conn.release();
+        }
+        else{
+            res.send('Anda tidak memiliki akses')
+        }
     }
     else{
         req.flash('message','anda harus login terlebih dahulu')
@@ -838,9 +907,14 @@ route.post('/addUserPage',async(req,res) =>{
 
 route.get('/addUser',express.urlencoded(),async(req,res) => {
     if(req.session.loggedin){
-        const conn = await dbConnect();
+        if(req.session.role=="Admin"){
+            const conn = await dbConnect();
         res.render('addUser');
         conn.release();
+        }
+        else{
+            res.send('Anda tidak memiliki akses')
+        }
     }
     else{
         req.flash('message','anda harus login terlebih dahulu')
@@ -851,7 +925,8 @@ route.get('/addUser',express.urlencoded(),async(req,res) => {
 route.post('/addAkun',express.urlencoded(),async(req,res) => {
 
     if(req.session.loggedin){
-        const conn = await dbConnect();
+        if(req.session.role=="Admin"){
+            const conn = await dbConnect();
         const nama = req.body.gantiNama
         const username = req.body.gantiUsername;
         const password = req.body.gantiPassword;
@@ -866,6 +941,9 @@ route.post('/addAkun',express.urlencoded(),async(req,res) => {
             else{
                 res.send('error')
             }
+        }
+        }else{
+            res.send('Anda tidak memilki akses')
         }
         conn.release();
     }
