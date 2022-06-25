@@ -3,7 +3,7 @@ import mysql from 'mysql';
 import { flash } from 'express-flash-message';
 import pdf from 'html-pdf';
 import ejs from 'ejs';
-import path from 'path';
+import path, { resolve } from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 var route = express.Router();
@@ -216,6 +216,19 @@ const updateUsername = (conn,usernameDiganti,results) => {
         conn.query(`UPDATE Dosen SET username = '${usernameDiganti}' WHERE username LIKE '%${results[0].username}%'`,(err,result) =>{
             if(err){
                 reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
+const addAkun = (conn,nama,username,password,noDosen,roles) => {
+    return new Promise((resolve,reject) => {
+        conn.query(`INSERT INTO dosen (namaD,noDosen,username,pwd,roles,statusSkripsi) VALUES ('${nama}','${noDosen}','${username}','${password}','${roles}',NULL)`,(err,result) => {
+            if(err){
+                reject(err)
             }
             else{
                 resolve(result);
@@ -808,6 +821,58 @@ route.post('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
     res.redirect('kelolaAkun');
 })
 
+//Post add user Page
+route.post('/addUserPage',async(req,res) =>{
+    if(req.session.loggedin){
+        const conn = await dbConnect();
+        res.redirect('/addUser');
+        conn.release();
+    }
+    else{
+        req.flash('message','anda harus login terlebih dahulu')
+        res.redirect('/');
+    }
+})
+
+//Get Add User Page
+
+route.get('/addUser',express.urlencoded(),async(req,res) => {
+    if(req.session.loggedin){
+        const conn = await dbConnect();
+        const nama = req.body.gantiNama
+        const username = req.body.gantiUsername;
+        const password = req.body.gantiPassword;
+        const noDosen = req.body.gantiNoDosen;
+        res.render('addUser');
+        conn.release();
+    }
+    else{
+        req.flash('message','anda harus login terlebih dahulu')
+        res.redirect('/');
+    }
+})
+
+route.post('/addAkun',express.urlencoded(),async(req,res) => {
+
+    if(req.session.loggedin){
+        const conn = await dbConnect();
+        const nama = req.body.gantiNama
+        const username = req.body.gantiUsername;
+        const password = req.body.gantiPassword;
+        const noDosen = req.body.gantiNoDosen;
+        const roles = req.body.Roles;
+        console.log(nama)
+        if(nama.length > 0 && username.length > 0 && password.length > 0 && noDosen.length > 0 && roles.length > 0){
+            await addAkun(conn,nama,username,password,noDosen,roles)
+            res.redirect('/kelolaAkun')
+        }
+        conn.release();
+    }
+    else{
+        req.flash('message','anda harus login terlebih dahulu')
+        res.redirect('/');
+    }
+})
 
 route.post('/',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
