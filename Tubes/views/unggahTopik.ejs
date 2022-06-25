@@ -32,8 +32,8 @@
                 </div>
                 <form method = POST action="/unggahTopik" id = "tambahTopik">
                     <fieldset>
-                        <label for="Judul" class="judul" >Judul</label>
-                        <input type="text" name = "judulT" id ="judulT">
+                        <label for="Judul" class="judul">Judul</label>
+                        <input type="text" name = "judulT" id ="judulT" required>
                         <label for="bidangPeminatan">Bidang Peminatan</label>
                         <select name="peminatan" id="">
                             <option value="Data Science">Data Science</option>
@@ -46,13 +46,13 @@
                         </select>
                         <label for="periodeT">Tahun Ajaran</label>
                         <select name="periode" id="">
-                            <option value="2020/2021">2020/2021</option>
-                            <option value="2021/2022">2021/2022</option>
+                            <option value="2020/2021" name="a">2020/2021</option>
+                            <option value="2021/2022"name="a">2021/2022</option>
                         </select>
                         <label for="UploadFile">Upload File</label>
                         <input type="file" id="fileSkripsi">
                         <br>
-                        <input type="submit" class="submitSkripsi" onclick="cekInputJudul()">
+                        <input type="submit" class="submitSkripsi" onclick="cekInputJudul()" readonly>
                     </fieldset>
                 </form>
             </div>
