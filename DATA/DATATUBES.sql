@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 14, 2022 at 10:58 AM
+-- Generation Time: Jun 25, 2022 at 06:18 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -32,20 +32,19 @@ CREATE TABLE `dosen` (
   `noDosen` int(10) NOT NULL,
   `username` varchar(50) DEFAULT NULL,
   `pwd` varchar(50) DEFAULT NULL,
-  `roles` varchar(5) DEFAULT NULL,
-  `statusSkripsi` varchar(50) DEFAULT NULL
+  `roles` varchar(5) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `dosen`
 --
 
-INSERT INTO `dosen` (`namaD`, `noDosen`, `username`, `pwd`, `roles`, `statusSkripsi`) VALUES
-('Husnul Hakim', 1181988001, 'husnul', '8001', 'Admin', NULL),
-('Elisati Hulu', 1181988002, 'elisati', '8002', 'Dosen', NULL),
-('Keenan Adiwijaya Leman', 1181988003, 'keenan', '8003', 'Dosen', NULL),
-('Maria Veronica', 1181988004, 'maria', '8004', 'Dosen', NULL),
-('Raymond Chandra Putra', 1181988005, 'raymond', '8005', 'Admin', NULL);
+INSERT INTO `dosen` (`namaD`, `noDosen`, `username`, `pwd`, `roles`) VALUES
+('Husnul', 1181988001, 'husnul', '8001', 'Admin'),
+('Elisati Hulu', 1181988002, 'elisati', '8002', 'Dosen'),
+('Keenan', 1181988003, 'keenan', '8003', 'Dosen'),
+('Maria Veronica', 1181988004, 'maria', '8004', 'Dosen'),
+('Raymond Chandra Putra', 1181988005, 'raymond', '8005', 'Admin');
 
 -- --------------------------------------------------------
 
@@ -82,6 +81,13 @@ CREATE TABLE `review` (
   `komentar` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `review`
+--
+
+INSERT INTO `review` (`reviewID`, `noDosen`, `idTopik`, `komentar`) VALUES
+(1, 1181988002, 2, 'a');
+
 -- --------------------------------------------------------
 
 --
@@ -89,15 +95,17 @@ CREATE TABLE `review` (
 --
 
 CREATE TABLE `semester` (
-  `periode` int(9) NOT NULL
+  `periode` int(9) NOT NULL,
+  `namaPeriode` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `semester`
 --
 
-INSERT INTO `semester` (`periode`) VALUES
-(1);
+INSERT INTO `semester` (`periode`, `namaPeriode`) VALUES
+(1, 'Pengunggahan Topik Skripsi'),
+(2, 'Pengambilan Topik Oleh Mahasiswa');
 
 -- --------------------------------------------------------
 
@@ -132,7 +140,7 @@ CREATE TABLE `topik` (
   `judulTopik` varchar(500) DEFAULT NULL,
   `peminatan` varchar(50) DEFAULT NULL,
   `tipe` varchar(20) NOT NULL,
-  `noDosen` varchar(10) DEFAULT NULL,
+  `noDosen` int(10) DEFAULT NULL,
   `tahunAjaran` varchar(9) NOT NULL,
   `statusSkripsi` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -142,31 +150,10 @@ CREATE TABLE `topik` (
 --
 
 INSERT INTO `topik` (`idTopik`, `judulTopik`, `peminatan`, `tipe`, `noDosen`, `tahunAjaran`, `statusSkripsi`) VALUES
-(1, 'Topik 1', 'Computing Science', 'Reguler', '1181988001', '2021/2022', 'OK'),
-(2, 'Topik 2', 'Computing Science', 'Bintang', '1181988003', '2021/2022', 'NULL'),
-(3, 'Judul Skripsi 1', 'Computing Science', 'Reguler', '1181988002', '2020/2021', 'OPEN');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `usertype`
---
-
-CREATE TABLE `usertype` (
-  `noDosen` char(10) DEFAULT NULL,
-  `roles` varchar(5) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `usertype`
---
-
-INSERT INTO `usertype` (`noDosen`, `roles`) VALUES
-('1181988001', 'Admin'),
-('1181988002', 'Dosen'),
-('1181988003', 'Dosen'),
-('1181988004', 'Dosen'),
-('1181988005', 'Admin');
+(2, 'Topik Computing', 'Computing Science', 'Bintang', 1181988002, '2020/2021', 'OK'),
+(3, 'Judul Skripsi Saya', 'Data Science', 'Reguler', 1181988002, '2021/2022', 'NULL'),
+(4, 'Topik 2', 'Data Science', 'Bintang', 1181988002, '2020/2021', 'NULL'),
+(5, 'Test', 'Data Science', 'Reguler', 1181988002, '2021/2022', 'NULL');
 
 --
 -- Indexes for dumped tables
@@ -188,7 +175,9 @@ ALTER TABLE `mahasiswa`
 -- Indexes for table `review`
 --
 ALTER TABLE `review`
-  ADD PRIMARY KEY (`reviewID`);
+  ADD PRIMARY KEY (`reviewID`),
+  ADD KEY `noDosen` (`noDosen`),
+  ADD KEY `idTopik` (`idTopik`) USING BTREE;
 
 --
 -- Indexes for table `semester`
@@ -200,7 +189,8 @@ ALTER TABLE `semester`
 -- Indexes for table `topik`
 --
 ALTER TABLE `topik`
-  ADD PRIMARY KEY (`idTopik`);
+  ADD PRIMARY KEY (`idTopik`),
+  ADD KEY `FOREIGNKEY` (`noDosen`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -217,6 +207,23 @@ ALTER TABLE `review`
 --
 ALTER TABLE `topik`
   MODIFY `idTopik` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2147483648;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `review`
+--
+ALTER TABLE `review`
+  ADD CONSTRAINT `idTopik` FOREIGN KEY (`idTopik`) REFERENCES `topik` (`idTopik`),
+  ADD CONSTRAINT `noDosen` FOREIGN KEY (`noDosen`) REFERENCES `dosen` (`noDosen`);
+
+--
+-- Constraints for table `topik`
+--
+ALTER TABLE `topik`
+  ADD CONSTRAINT `FOREIGNKEY` FOREIGN KEY (`noDosen`) REFERENCES `dosen` (`noDosen`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

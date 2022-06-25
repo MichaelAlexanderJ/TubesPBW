@@ -226,7 +226,7 @@ const updateUsername = (conn,usernameDiganti,results) => {
 
 const addAkun = (conn,nama,username,password,noDosen,roles) => {
     return new Promise((resolve,reject) => {
-        conn.query(`INSERT INTO dosen (namaD,noDosen,username,pwd,roles,statusSkripsi) VALUES ('${nama}','${noDosen}','${username}','${password}','${roles}',NULL)`,(err,result) => {
+        conn.query(`INSERT INTO dosen (namaD,noDosen,username,pwd,roles) VALUES ('${nama}','${noDosen}','${username}','${password}','${roles}')`,(err,result) => {
             if(err){
                 reject(err)
             }
@@ -839,10 +839,6 @@ route.post('/addUserPage',async(req,res) =>{
 route.get('/addUser',express.urlencoded(),async(req,res) => {
     if(req.session.loggedin){
         const conn = await dbConnect();
-        const nama = req.body.gantiNama
-        const username = req.body.gantiUsername;
-        const password = req.body.gantiPassword;
-        const noDosen = req.body.gantiNoDosen;
         res.render('addUser');
         conn.release();
     }
@@ -863,8 +859,13 @@ route.post('/addAkun',express.urlencoded(),async(req,res) => {
         const roles = req.body.Roles;
         console.log(nama)
         if(nama.length > 0 && username.length > 0 && password.length > 0 && noDosen.length > 0 && roles.length > 0){
-            await addAkun(conn,nama,username,password,noDosen,roles)
-            res.redirect('/kelolaAkun')
+            if(roles =="Admin" || roles == "Dosen"){
+                await addAkun(conn,nama,username,password,noDosen,roles)
+                res.redirect('/kelolaAkun')
+            }
+            else{
+                res.send('error')
+            }
         }
         conn.release();
     }
