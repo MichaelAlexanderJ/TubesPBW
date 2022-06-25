@@ -773,7 +773,8 @@ route.post('/daftarTopikExportToPDF',express.urlencoded(), async(req,res) => {
 
 
 route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
-    const getName = req.query.filter;
+    if(req.session.role=="Admin"){
+        const getName = req.query.filter;
     const conn = await dbConnect();
     let results = await getUsersPage(conn);
     const numResults = results.length;
@@ -803,7 +804,7 @@ route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
             }
         }
         else{
-            req.flash('message','anda harus login terlebih dahulu')
+            req.flash('message','anda harus login terlebih dahuluu')
             res.redirect('/');
         }
     //search filter
@@ -823,8 +824,11 @@ route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
             req.flash('message','anda harus login terlebih dahulu')
             res.redirect('/');
         }
+        conn.release();
     }
-                conn.release();
+    }else{
+        res.send('Anda tidak memiliki akses')
+    }
         });
 
 route.post('/kelolaAkun',express.urlencoded(),async(req,res)=>{
@@ -849,7 +853,7 @@ route.get('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
     conn.release();
     if(req.session.loggedin){
         if(req.session.role=="Admin"){
-            res.redirect('kelolaAkunLanjutan');
+            res.render('kelolaAkunLanjutan');
         }
         else{
             res.send('Anda tidak memiliki akses')
