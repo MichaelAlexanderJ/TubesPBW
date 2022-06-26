@@ -532,10 +532,15 @@ route.post('/skripsiSaya',express.urlencoded(), async(req,res) => {
     const ubahStat = req.body.gantiStat;
     const idTopik = req.body.noTopik
     var sql = `UPDATE topik SET statusSkripsi = '${ubahStat}' WHERE idTopik ='${idTopik}'`
-    conn.query(sql, [ubahStat,idTopik], ()=>{
-        res.redirect('/skripsiSaya')
-        res.end();
-    })
+    if(ubahStat == "OPEN" ||ubahStat == "CLOSE"||ubahStat == "TAKEN"){
+        conn.query(sql, [ubahStat,idTopik], ()=>{
+            res.redirect('/skripsiSaya')
+            res.end();
+        })
+    }
+        else{
+            res.send('Data error')
+        }
     conn.release();
 });
 
@@ -712,10 +717,15 @@ route.post('/daftarTopik',express.urlencoded(), async(req,res) => {
     const ubahStat = req.body.gantiStat;
     const idTopik = req.body.noTopik;
     var sql = `UPDATE topik SET statusSkripsi = '${ubahStat}' WHERE idTopik ='${idTopik}'`
-    conn.query(sql, [ubahStat,idTopik], ()=>{
-        res.redirect('/daftarTopik')
-        res.end();
-    })
+    if(ubahStat == "OK"|| ubahStat == "NO" || ubahStat == "INQ"){
+        conn.query(sql, [ubahStat,idTopik], ()=>{
+            res.redirect('/daftarTopik')
+            res.end();
+        })
+    }
+    else{
+        res.send('Data Error')
+    }
 });
 
 //delete topik
