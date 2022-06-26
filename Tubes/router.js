@@ -5,6 +5,7 @@ import pdf from 'html-pdf';
 import ejs from 'ejs';
 import path, { resolve } from 'path';
 import { fileURLToPath } from 'url';
+import multer from 'multer';
 import fs from 'fs';
 var route = express.Router();
 const __filename = fileURLToPath(import.meta.url);
@@ -475,42 +476,56 @@ route.get('/', async(req,res) => {
     });
     
 
-route.get('/unggahTopik',express.urlencoded(), async(req,res) => {
-    const conn = await dbConnect();
-    var test = await getTopik(conn);
-    const message = req.flash('message')
-    conn.release();
-    if(req.session.loggedin){
-        res.render('unggahTopik', { message, test
-        });
-    }
-     else {
-        res.redirect('/')
-    }
-});
-
-route.post('/unggahTopik',express.urlencoded(), async(req,res) => {
-    const noID = req.session.noID; //Buat dapetin noDosen
-    const judul = req.body.judulT;
-    const bidang = req.body.peminatan;
-    const tipeT = req.body.tipeSkripsi;
-    const periode = req.body.periode;
-    const conn = await dbConnect();
-    var maxID = await getMax(conn); //Buat dapetin IdTopik terbesar di DB
-    var test = await getTopik(conn);
-    var idx = maxID[0].max+1;
-    if(judul.length > 0 && bidang.length > 0 && tipeT.length > 0 && periode.length>0 ){
-        if(periode == "2020/2021" || periode == "2021/2022" || tipeT == "Data Science" || tipeT == "Computing Science" || bidang == "*" || bidang == "Reguler"){
-            await tambahTopik(conn,idx, judul, bidang, tipeT, noID,periode);
-            res.redirect('/unggahTopik')
+    const fileStorageEngine  = multer.diskStorage({
+        destination: ( req, file, cb)=>{
+            cb(null,"./uploadedFile");
+            },
+        filename: (req, file, cb)=>{
+            cb(null,Date.now()+'--'+ file.originalname);
+           },
+    });
+        
+    const upload = multer({storage: fileStorageEngine});
+    
+    route.get('/unggahTopik',express.urlencoded(), async(req,res) => {
+        const conn = await dbConnect();
+        const message = req.flash('message')
+        conn.release();
+        if(req.session.loggedin){
+            res.render('unggahTopik', { message
+            });
+        }
+         else {
+            res.redirect('/')
+        }
+    });
+    
+    route.post('/unggahTopik',express.urlencoded(), upload.single("fileTopik"), async(req,res) => {
+        const noID = req.session.noID; //Buat dapetin noDosen
+        const judul = req.body.judulT;
+        const bidang = req.body.peminatan;
+        const tipeT = req.body.tipeSkripsi;
+        const periode = req.body.periode;
+        const conn = await dbConnect();
+        var maxID = await getMax(conn); //Buat dapetin IdTopik terbesar di DB
+        var idx = maxID[0].max+1;
+    
+        if(req.session.loggedin){
+            res.render('unggahTopik', {
+                noID, idx, judul, bidang, tipeT,periode
+            });
         }
         else{
-            res.send('error')
+            req.flash('message', 'Anda harus login terlebih dahulu');
+            res.redirect('/')
         }
-    }
-    conn.release();
-    console.log(periode)
-});
+        if(judul.length > 0 && bidang.length > 0 && tipeT.length > 0 && periode.length>0 ){
+            await tambahTopik(conn,idx, judul, bidang, tipeT, noID,periode);
+            res.sendFile('unggahTopik.ejs', {root: "./views"})
+        }
+        
+        conn.release();
+    });
 
 route.get('/skripsiSaya', async(req,res) => {
     const noID = req.session.noID;
