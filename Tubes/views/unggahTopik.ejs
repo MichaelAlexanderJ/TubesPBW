@@ -27,10 +27,7 @@
         <div class="unggahMain">
             
             <div class="formUnggah">
-                <div class="alert">
-                    <%=   %> 
-                </div>
-                <form method = POST action="/unggahTopik" id = "tambahTopik">
+                <form method = POST action="/unggahTopik" id = "tambahTopik" enctype="multipart/form-data">
                     <fieldset>
                         <label for="Judul" class="judul" >Judul</label>
                         <input type="text" name = "judulT" id ="judulT">
@@ -50,10 +47,7 @@
                             <option value="2021/2022">2021/2022</option>
                         </select>
                         <label for="UploadFile">Upload File</label>
-                        <form action="/single" method="POST" enctype="multipart/form-data">
-                            <input type="file" name="image"/>
-                            <button type="submit">OK</button>
-                        </form>
+                            <input type="file" name="fileTopik">
                         <br>
                         <input type="submit" class="submitSkripsi" onclick="cekInputJudul()">
                     </fieldset>

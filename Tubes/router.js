@@ -7,7 +7,6 @@ import alert from 'alert';
 import multer from 'multer';
 
 var route = express.Router();
-
 // query
 
 const getTopik = conn => {
@@ -473,6 +472,16 @@ route.get('/', async(req,res) => {
     res.render('login', { message})
     });
     
+const fileStorageEngine  = multer.diskStorage({
+    destination: ( req, file, cb)=>{
+        cb(null,"./uploadedFile");
+        },
+    filename: (req, file, cb)=>{
+        cb(null,Date.now()+'--'+ file.originalname);
+       },
+});
+    
+const upload = multer({storage: fileStorageEngine});
 
 route.get('/unggahTopik',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
@@ -487,8 +496,7 @@ route.get('/unggahTopik',express.urlencoded(), async(req,res) => {
     }
 });
 
-route.post('/unggahTopik',express.urlencoded(), async(req,res) => {
-    
+route.post('/unggahTopik',express.urlencoded(), upload.single("fileTopik"), async(req,res) => {
     const noID = req.session.noID; //Buat dapetin noDosen
     const judul = req.body.judulT;
     const bidang = req.body.peminatan;
@@ -509,10 +517,10 @@ route.post('/unggahTopik',express.urlencoded(), async(req,res) => {
     }
     if(judul.length > 0 && bidang.length > 0 && tipeT.length > 0 && periode.length>0 ){
         await tambahTopik(conn,idx, judul, bidang, tipeT, noID,periode);
+        res.sendFile('unggahTopik.ejs', {root: "./views"})
     }
-    res.sendFile((__dirname, "unggahTopik.ejs"));
+    
     conn.release();
-
 });
 
 route.get('/skripsiSaya', async(req,res) => {
@@ -829,31 +837,6 @@ route.post('/',express.urlencoded(), async(req,res) => {
 
 //test Upload File
 
-
-const fileStorageEngine  = multer.diskStorage({
-	destination: ( req, file, cb)=>{
-		cb(null,"./uploadedFile");
-	},
-	filename: (req, file, cb)=>{
-		cb(null,Date.now()+'--'+ file.originalname);
-	},
-});
-
-const upload = multer({storage: fileStorageEngine});
-
-route.get("/upload", (req, res)=>{
-    res.sendFile((__dirname, "unggahTopik.ejs"));
-});
-
-route.post("/single", upload.single('image'),(req, res)=>{
-	console.log(req.file);
-	res.send("Single File Upload Succes");
-});
-
-route.post("/multiple", upload.array('images', 3),(req, res)=>{
-	console.log(req.files);
-	res.send("Multiple File Upload Succes");
-});
 //
 
 export {route};
