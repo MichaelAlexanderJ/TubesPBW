@@ -12,7 +12,34 @@
     <header>
         <%- include('./layout/head.ejs') %>
     </header>
+                        <!-- bagian modal -->
 
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-container">
+          <form action="/kelolaAkunLanjutan" method="post">
+              <fieldset>
+                  <h3>Masukan username akun yang ingin diganti</h3>
+                  <input type="text" class="akunDiganti" name="akunGanti">
+                  <label for="">Change Name</label>
+                  <input type="text" class="gantiNama" name="gantiNama">
+                  <label for="">Change numberID</label>
+                  <input type="text" class="gantiNoDosen" name="gantiNoDosen">
+                  <label for="">Change username</label>
+                  <input type="text" class="gantiUsername" name="gantiUsername">
+                  <label for="">Change password</label>
+                  <input type="text" class="gantiPassword" name="gantiPassword">
+                  <input type="submit" id="gantiNama" value="submit">
+              </fieldset>
+          </form>
+      </div>
+      <span class="close">&times;</span>
+    </div>
+  
+  </div>
     <div class="kelolaAkunContainer">
         <div class="kelolaAkunTop">
             <a href="http://localhost:8080/homeAdmin">
@@ -20,6 +47,10 @@
             </a>
             <h3 class="judulKelola">Kelola Akun</h3>
 
+            <div class="editAkunButton">
+                <button id="myBtn">Edit Akun</button>
+            </div>
+            
                 <div class="containerButton">
                     <form action="/addUserPage" class="submitEdit" method="post">
                         <input type="submit" id="buttonEdit" value="Add User">
@@ -33,7 +64,7 @@
         <div class="kelolaAkunMain">
                 <div class="innerMain">
                     <% results.forEach(entry => {  %>
-                    <a class="wrapper" href="">
+                    <div class="wrapper" href="">
                         <div class="innerMain1">
                             <img src="assets/images/adminIcon.jpg" class="adminIcon" alt="">
 
@@ -43,7 +74,6 @@
 
                             <div class="infoAkun">
                                 <div class="container1">
-
                                     <table class="tableInfo">
                                         <tr>
                                             <th>Username : </th>
@@ -61,15 +91,8 @@
 
                                 </div>
                             </div>
-
-                            <div class="containerButton">
-                                <form action="/kelolaAkun" class="submitEdit" method="post">
-                                    <input type="submit" id="buttonEdit" value="Edit">
-                                </form>
-                            </div>
-
                         </div>
-                    </a>
+                    </div>
                     <% }) %>
                     <br>
                     <div class="paginationPage">
@@ -92,6 +115,23 @@
     <footer>
         <%- include('./layout/footer.ejs') %>
     </footer>
-    
+
+    <script>
+        var modal = document.getElementById("myModal");
+        var btn = document.getElementById("myBtn");
+        var span = document.getElementsByClassName("close")[0];
+        btn.onclick = function() {
+          modal.style.display = "block";
+        }
+        span.onclick = function() {
+          modal.style.display = "none";
+        }
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+    </script>
+
 </body>
 </html>

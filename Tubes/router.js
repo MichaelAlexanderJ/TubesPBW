@@ -800,7 +800,7 @@ route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
     let startLimit = (page-1) * resultsPage;
 
     results = await getUsersPage2(conn,startLimit,resultsPage);
-        let iteration = (page-3) < 1 ? 1 : page-3;
+        let iteration = (page-3) < 1 ? 1 : page-2;
         let ending = (iteration+7) <= numPages ? (iteration+7) : page + (numPages-page);
         if(ending < (page+1)){
             iteration -= (page+1) - numPages;
@@ -941,7 +941,7 @@ route.post('/addAkun',express.urlencoded(),async(req,res) => {
 
     if(req.session.loggedin){
         if(req.session.role=="Admin"){
-            const conn = await dbConnect();
+        const conn = await dbConnect();
         const nama = req.body.gantiNama
         const username = req.body.gantiUsername;
         const password = req.body.gantiPassword;
@@ -957,10 +957,10 @@ route.post('/addAkun',express.urlencoded(),async(req,res) => {
                 res.send('error')
             }
         }
+        conn.release();
         }else{
             res.send('Anda tidak memilki akses')
         }
-        conn.release();
     }
     else{
         req.flash('message','anda harus login terlebih dahulu')
