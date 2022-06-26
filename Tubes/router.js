@@ -72,7 +72,7 @@ const getKomen = (conn, idTopik) => {
 
 const getNamaD = (conn,idTopik) => {
     return new Promise((resolve,reject) => {
-        conn.query(`SELECT * FROM dosen JOIN review ON dosen.noDosen = review.noDosen WHERE idTopik ='${idTopik}'`, (err,result) => {
+        conn.query(`SELECT * FROM dosen JOIN review ON dosen.noDosen = review.noDosen`, (err,result) => {
             if(err){
                 reject(err);
             }else{
