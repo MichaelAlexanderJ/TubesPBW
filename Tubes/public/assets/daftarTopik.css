@@ -149,6 +149,13 @@ fieldset{
     width: 10%;
     justify-content: center;
     align-items: center;
+    margin-left: 30%;
+}
+.gantiStat{
+    margin-top: 5%;
+}
+.delete{
+    margin-top: 5%;
 }
 
 /* Bagian Komentar */

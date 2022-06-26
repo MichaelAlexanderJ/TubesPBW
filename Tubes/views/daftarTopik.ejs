@@ -66,12 +66,12 @@
                                     </select>
                                     <br>
                                     <input type="hidden" name ="noTopik" value="<%= row.idTopik %>">
-                                    <input type="submit" name="updateStat" onclick="redirect" value="Ganti Status">
+                                    <input type="submit" name="updateStat" class="gantiStat" onclick="redirect" value="Ganti Status">
                                     <br>
                                 </form>
                                     <form action="/daftarTopik3" method="post">
                                         <input type="hidden" name ="noTopik" value="<%= row.idTopik %>">
-                                        <input type="submit" name="deleteTopik" onclick="redirect" value="DELETE">
+                                        <input type="submit" name="deleteTopik" class="delete" onclick="redirect" value="DELETE">
                                     </form>
                                 
                             </div>
