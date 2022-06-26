@@ -759,6 +759,12 @@ route.get('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
     }
 });
 
+//upload image
+route.get('/kelolaAkunUpload', (req, res, next)=>{
+    res.sendFile('kelolaAkun',{root:__dirname+ "//views"});
+})
+
+
 route.post('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
     const conn = await dbConnect();
     let akunDiganti = req.body.akunGanti;
