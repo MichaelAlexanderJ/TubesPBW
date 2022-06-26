@@ -14,7 +14,7 @@ const __dirname = path.dirname(__filename);
 
 const getTopik = conn => {
     return new Promise((resolve, reject) => {
-        conn.query('SELECT * FROM topik'    , (err, result)=> {
+        conn.query('SELECT * FROM topik JOIN dosen ON topik.noDosen = dosen.noDosen'    , (err, result)=> {
             if(err){
                 reject(err);
             }else{
@@ -411,7 +411,7 @@ route.get('/daftarTopikDosen',express.urlencoded(), async(req,res) => {
         res.redirect('/')
     }
     conn.release();
-    console.log(req.session.role)
+    console.log(results)
     });
 
     route.post('/daftarTopikDosen2',express.urlencoded(), async(req,res) => {
@@ -738,6 +738,7 @@ route.post('/daftarTopik3',express.urlencoded(), async(req,res) => {
         res.end();
     })
 });
+
 
 route.post('/daftarTopik2',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
