@@ -10,13 +10,14 @@
     border: solid darkblue 0.1rem;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     text-align: center;
 }
 
 .skripsiSayaTop h3{
     margin: 1rem;
+    margin-left: 32%;
 }
 
 .skripsiSayaTop img{
