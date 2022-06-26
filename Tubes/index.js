@@ -13,31 +13,6 @@ const PORT = 8080;
 const app = express();
 
 const durasi = 1000 * 60 * 60 * 1;
-
-//test Upload File
-const multer = require('multer');
-
-const fileStorage = multer.diskStorage({
-	destination: ( req, file, cb)=>{
-		cb(null,'uploadedFile');
-	},
-	filename: (req, file, cb)=>{
-		cb(null,new Date().toDateString()+'-'+ file.originalname)
-	}
-})
-
-const fileFileter = (req, res, cb)=>{
-	if(file.mimetype === 'uploadFile/pdf'|| file.mimetype === 'uploadFile/doc' ){
-		cb(null, true);
-	}
-	else{
-		cb(null,false);
-	}
-
-}
-
-app.use(multer({storage: fileStorage, fileFilter: fileFileter}).single('uploadFile'))
-//
  
 
 app.use(session({

@@ -4,6 +4,7 @@ import mysql from 'mysql';
 import { flash } from 'express-flash-message';
 import { get } from 'http';
 import alert from 'alert';
+import multer from 'multer';
 
 var route = express.Router();
 
@@ -496,6 +497,7 @@ route.post('/unggahTopik',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     var maxID = await getMax(conn); //Buat dapetin IdTopik terbesar di DB
     var idx = maxID[0].max+1;
+
     if(req.session.loggedin){
         res.render('unggahTopik', {
             noID, idx, judul, bidang, tipeT,periode
@@ -508,7 +510,9 @@ route.post('/unggahTopik',express.urlencoded(), async(req,res) => {
     if(judul.length > 0 && bidang.length > 0 && tipeT.length > 0 && periode.length>0 ){
         await tambahTopik(conn,idx, judul, bidang, tipeT, noID,periode);
     }
+    res.sendFile((__dirname, "unggahTopik.ejs"));
     conn.release();
+
 });
 
 route.get('/skripsiSaya', async(req,res) => {
@@ -760,9 +764,7 @@ route.get('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
 });
 
 //upload image
-route.get('/kelolaAkunUpload', (req, res, next)=>{
-    res.sendFile('kelolaAkun',{root:__dirname+ "//views"});
-})
+
 
 
 route.post('/kelolaAkunLanjutan',express.urlencoded(), async(req,res) =>{
@@ -825,6 +827,33 @@ route.post('/',express.urlencoded(), async(req,res) => {
     
 })
 
-export {route};
+//test Upload File
 
-// DropDown Status DaftarSkirpsi
+
+const fileStorageEngine  = multer.diskStorage({
+	destination: ( req, file, cb)=>{
+		cb(null,"./uploadedFile");
+	},
+	filename: (req, file, cb)=>{
+		cb(null,Date.now()+'--'+ file.originalname);
+	},
+});
+
+const upload = multer({storage: fileStorageEngine});
+
+route.get("/upload", (req, res)=>{
+    res.sendFile((__dirname, "unggahTopik.ejs"));
+});
+
+route.post("/single", upload.single('image'),(req, res)=>{
+	console.log(req.file);
+	res.send("Single File Upload Succes");
+});
+
+route.post("/multiple", upload.array('images', 3),(req, res)=>{
+	console.log(req.files);
+	res.send("Multiple File Upload Succes");
+});
+//
+
+export {route};

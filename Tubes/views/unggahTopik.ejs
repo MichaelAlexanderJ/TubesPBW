@@ -50,7 +50,10 @@
                             <option value="2021/2022">2021/2022</option>
                         </select>
                         <label for="UploadFile">Upload File</label>
-                        <input type="file" id="fileSkripsi">
+                        <form action="/single" method="POST" enctype="multipart/form-data">
+                            <input type="file" name="image"/>
+                            <button type="submit">OK</button>
+                        </form>
                         <br>
                         <input type="submit" class="submitSkripsi" onclick="cekInputJudul()">
                     </fieldset>
