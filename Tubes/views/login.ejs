@@ -37,9 +37,9 @@
                 <%= message  %> 
             </div>
                 <label for="username">Username</label><br>
-                <input type="text" id="name" name="user"><br><br>
+                <input type="text" id="name" name="user" placeholder="enter username.." required><br><br>
                 <label for="password">Password</label><br>
-                <input type="password" id="name" name="pass"><br><br><br>
+                <input type="password" id="name" name="pass" title="Password must contain: Minimum 8 characters atleast 1 Alphabet and 1 Number" required pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$" ><br><br><br>
                 <input type="submit" id="button" onclick="redirect" value="Login">
         </form>
     </div>
