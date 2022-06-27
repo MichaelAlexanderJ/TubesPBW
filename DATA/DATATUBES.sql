@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 25, 2022 at 06:18 PM
+-- Generation Time: Jun 27, 2022 at 03:43 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -40,11 +40,11 @@ CREATE TABLE `dosen` (
 --
 
 INSERT INTO `dosen` (`namaD`, `noDosen`, `username`, `pwd`, `roles`) VALUES
-('Husnul', 1181988001, 'husnul', '8001', 'Admin'),
-('Elisati Hulu', 1181988002, 'elisati', '8002', 'Dosen'),
-('Keenan', 1181988003, 'keenan', '8003', 'Dosen'),
-('Maria Veronica', 1181988004, 'maria', '8004', 'Dosen'),
-('Raymond Chandra Putra', 1181988005, 'raymond', '8005', 'Admin');
+('Husnul', 1181988001, 'husnul', 'husnul123', 'Admin'),
+('Elisati Hulu', 1181988002, 'elisati', 'elisati123', 'Dosen'),
+('Keenan', 1181988003, 'keenan', 'keenan123', 'Dosen'),
+('Maria Veronica', 1181988004, 'maria', 'maria123', 'Dosen'),
+('Raymond Chandra Putra', 1181988005, 'raymond', 'raymond123', 'Admin');
 
 -- --------------------------------------------------------
 
@@ -150,10 +150,10 @@ CREATE TABLE `topik` (
 --
 
 INSERT INTO `topik` (`idTopik`, `judulTopik`, `peminatan`, `tipe`, `noDosen`, `tahunAjaran`, `statusSkripsi`) VALUES
-(2, 'Topik Computing', 'Computing Science', 'Bintang', 1181988002, '2020/2021', 'OK'),
-(3, 'Judul Skripsi Saya', 'Data Science', 'Reguler', 1181988002, '2021/2022', 'NULL'),
-(4, 'Topik 2', 'Data Science', 'Bintang', 1181988002, '2020/2021', 'NULL'),
-(5, 'Test', 'Data Science', 'Reguler', 1181988002, '2021/2022', 'NULL');
+(2, 'Topik Computing', 'Computing Science', 'Bintang', 1181988002, '2020/2021', 'OPEN'),
+(3, 'Judul Skripsi Saya', 'Data Science', 'Reguler', 1181988005, '2021/2022', 'CLOSE'),
+(4, 'Topik 2', 'Data Science', 'Bintang', 1181988003, '2020/2021', 'TAKEN'),
+(5, 'Test', 'Data Science', 'Reguler', 1181988004, '2021/2022', 'OPEN');
 
 --
 -- Indexes for dumped tables

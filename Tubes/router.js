@@ -9,7 +9,6 @@ import multer from 'multer';
 import fs from 'fs';
 var route = express.Router();
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // query
 
@@ -36,28 +35,6 @@ const getTopikFilter = (conn,getName) => {
         });
     });
 };
-// const getTopikbyStatus = (conn,inputStatus) => {
-//     return new Promise((resolve, reject) => {
-//         conn.query(`SELECT * FROM topik WHERE statusSkripsi = '${inputStatus}'` , (err, result)=> {
-//             if(err){
-//                 reject(err);
-//             }else{
-//                 resolve(result);
-//             }
-//         });
-//     });
-// };
-// const getTopikbyTahun = (conn,inputTahun) => {
-//     return new Promise((resolve, reject) => {
-//         conn.query(`SELECT * FROM topik WHERE tahunAjaran = '${inputTahun}'` , (err, result)=> {
-//             if(err){
-//                 reject(err);
-//             }else{
-//                 resolve(result);
-//             }
-//         });
-//     });
-// };
 
 const getKomen = (conn, idTopik) => {
     return new Promise((resolve, reject) => {
@@ -173,6 +150,7 @@ const getUsername = (conn,akunDiganti) => {
     })
 }
 
+//query untuk mengubah nama dosen
 const updateNama = (conn,namaDiganti,results) => {
     return new Promise((resolve,reject) => {
         conn.query(`UPDATE Dosen SET namaD = '${namaDiganti}' WHERE namaD LIKE '%${results[0].namaD}%'`,(err,result) =>{
@@ -186,6 +164,7 @@ const updateNama = (conn,namaDiganti,results) => {
     })
 }
 
+//query untuk mengubah password
 const updatePassword = (conn,passwordDiganti,results) => {
     return new Promise((resolve,reject) => {
         conn.query(`UPDATE Dosen SET pwd = '${passwordDiganti}' WHERE pwd = '${results[0].pwd}'`,(err,result) =>{
@@ -199,6 +178,7 @@ const updatePassword = (conn,passwordDiganti,results) => {
     })
 }
 
+//query untuk mengubah nomor dosen
 const updateNoDosen = (conn,noDosenDiganti,results) => {
     return new Promise((resolve,reject) => {
         conn.query(`UPDATE Dosen SET noDosen = '${noDosenDiganti}' WHERE noDosen = '${results[0].noDosen}'`,(err,result) =>{
@@ -212,6 +192,7 @@ const updateNoDosen = (conn,noDosenDiganti,results) => {
     })
 }
 
+//query untuk mengubah username
 const updateUsername = (conn,usernameDiganti,results) => {
     return new Promise((resolve,reject) => {
         conn.query(`UPDATE Dosen SET username = '${usernameDiganti}' WHERE username LIKE '%${results[0].username}%'`,(err,result) =>{
@@ -225,6 +206,7 @@ const updateUsername = (conn,usernameDiganti,results) => {
     })
 }
 
+//query untuk memasukan akun baru ke database
 const addAkun = (conn,nama,username,password,noDosen,roles) => {
     return new Promise((resolve,reject) => {
         conn.query(`INSERT INTO dosen (namaD,noDosen,username,pwd,roles) VALUES ('${nama}','${noDosen}','${username}','${password}','${roles}')`,(err,result) => {
@@ -238,6 +220,7 @@ const addAkun = (conn,nama,username,password,noDosen,roles) => {
     })
 }
 
+//query untuk mendapatkan data-data user dosen yang terdaftar
 const getUsersPage = conn => {
     return new Promise((resolve,reject) =>{
         conn.query('SELECT * FROM dosen',(err,result) => {
@@ -261,6 +244,8 @@ const getUsersPage2 = (conn,startLimit,resultsPage) => {
         });
     });
 };  
+
+//query untuk mendapatkan nilai terbesar dari idtopik di tabel topik
 const getMax = conn => {
     return new Promise((resolve, rejects) =>{
         conn.query('SELECT MAX(idTopik) as max FROM topik',(err, result) =>{
@@ -272,6 +257,8 @@ const getMax = conn => {
         });
     });
 };
+
+//query untuk mendapatkan nilai terbesar dari reviewid di tabel review
 const getMaxRev = conn => {
     return new Promise((resolve, rejects) =>{
         conn.query('SELECT MAX(reviewID) as max FROM review',(err, result) =>{
@@ -284,6 +271,7 @@ const getMaxRev = conn => {
     });
 };
 
+//query untuk menambahkan topik
 const tambahTopik = (conn,idx, judul, bidang, tipeS, noID, periode) => {
     return new Promise((resolve,reject) => {
         conn.query(`INSERT INTO topik (idTopik, judulTopik, peminatan, tipe, noDosen, tahunAjaran, statusSkripsi) VALUES (${idx},'${judul}', '${bidang}','${tipeS}', '${noID}', '${periode}', "NULL") `,(err,result) => {
@@ -297,6 +285,7 @@ const tambahTopik = (conn,idx, judul, bidang, tipeS, noID, periode) => {
     })
 }
 
+//query untuk menampilkan topik milik dosen untuk di halaman skripsiSaya
 const topikDosen = (conn,noID) => {
     return new Promise((resolve,reject) => {
         conn.query(`SELECT idTopik, judulTopik, peminatan, tipe, statusSkripsi FROM topik WHERE noDosen LIKE '%${noID}%' `,(err,result) => {
@@ -527,6 +516,7 @@ route.get('/', async(req,res) => {
         conn.release();
     });
 
+//mengambil koneksi untuk skripsiSaya
 route.get('/skripsiSaya', async(req,res) => {
     const noID = req.session.noID;
     const conn = await dbConnect();
@@ -559,7 +549,7 @@ route.post('/skripsiSaya',express.urlencoded(), async(req,res) => {
     conn.release();
 });
 
-
+//mengambil koneksi untuk daftartopik + filter nama
 route.get('/daftarTopik',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     let results = await getTopik(conn);
@@ -635,36 +625,6 @@ route.get('/laporanDaftarTopik',express.urlencoded(), async(req,res) => {
         }
         console.log(noDosenData)
      }
-    // else if(getStatus != undefined && getStatus.length > 0){
-    //     var stat = await getStatuSS(conn,getStatus);
-    //     var inputStatus = stat[0].statusSkripsi;
-    //     results = await getTopikbyStatus(conn,inputStatus);
-    //     console.log(inputStatus)
-    //     if(req.session.loggedin){
-    //         res.render('daftarTopikDosen',{
-    //             results,comments, nama, idTopik, namaKomen
-    //         })
-    //     }
-    //     else{
-    //         req.flash('message','anda harus login terlebih dahulu')
-    //         res.redirect('/');
-    //     }
-    // }
-    // else if(getTahun != undefined && getTahun.length > 0){
-    //     var thnAjaran = await getThn(conn,getTahun);
-    //     var inputTahun = thnAjaran[0].tahunAjaran;
-    //     console.log(inputTahun)
-    //     results = await getTopikbyTahun(conn,inputTahun);
-    //     if(req.session.loggedin){
-    //         res.render('daftarTopikDosen',{
-    //             results,comments, nama, idTopik, namaKomen
-    //         })
-    //     }
-    //     else{
-    //         req.flash('message','anda harus login terlebih dahulu')
-    //         res.redirect('/');
-    //     }
-    // }
     else if(req.session.loggedin){
         if(req.session.role=="Admin"){
             res.render('laporanDaftarTopik',{
@@ -703,6 +663,7 @@ route.get('/daftarTopik2',express.urlencoded(), async(req,res) => {
     }
     conn.release();
 });
+
 //get delete topik
 route.get('/daftarTopik3',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
@@ -727,6 +688,7 @@ route.get('/daftarTopik3',express.urlencoded(), async(req,res) => {
     conn.release();
 });
 
+//mengubah status skripsi
 route.post('/daftarTopik',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     const ubahStat = req.body.gantiStat;
@@ -754,7 +716,7 @@ route.post('/daftarTopik3',express.urlencoded(), async(req,res) => {
     })
 });
 
-
+//menambahkan komentar
 route.post('/daftarTopik2',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     const komen = req.body.komentar;
@@ -797,7 +759,7 @@ route.post('/daftarTopikExportToPDF',express.urlencoded(), async(req,res) => {
     conn.release();
     });
 
-
+//kelola akun
 route.get('/kelolaAkun',express.urlencoded(), async(req,res) => {
     if(req.session.role=="Admin"){
         const getName = req.query.filter;
@@ -952,6 +914,7 @@ route.get('/addUser',express.urlencoded(),async(req,res) => {
     }
 })
 
+//memanggil koneksi addAkun
 route.post('/addAkun',express.urlencoded(),async(req,res) => {
 
     if(req.session.loggedin){
@@ -983,6 +946,7 @@ route.post('/addAkun',express.urlencoded(),async(req,res) => {
     }
 })
 
+//halaman log-in
 route.post('/',express.urlencoded(), async(req,res) => {
     const conn = await dbConnect();
     const cekUser = checkLogin(conn,username,password)
